@@ -19,42 +19,52 @@ closeConnection: function (){
 });
 },
 
-addAddress: function (addressID, houseNumber, street, city, state, zipCode, aptNumber){
-    let queryString = `INSERT INTO Address VALUES(${addressID}, ${houseNumber}, ${street}, ${city}, ${state}, ${zipCode}, ${aptNumber});`;
+addAddress: function (houseNumber, street, city, state, zipCode, aptNumber){
+    let queryString = `INSERT INTO Address(house_number, street, city, state, zip_code, apt_number) VALUES(${houseNumber}, "${street}", "${city}", "${state}", ${zipCode}, "${aptNumber}");`;
 
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
     })
 },
 
-addName: function (nameID, firstName, middleName, lastName){
-    let queryString = `INSERT INTO Name VALUES(${nameID}, ${firstName}, ${middleName}, ${lastName});`;
+getAddressID: function(houseNumber, street, city, state, zipCode, aptNumber){
+    let queryString = `SELECT address_id FROM Address WHERE house_number = ${houseNumber} AND street = "${street}" AND city = "${city}" AND state = "${state}" AND zip_code = "${zipCode}" AND apt_number = "${aptNumber}";`;
+    var answer;
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;
+        answer= JSON.stringify(result[0].address_id);
+    })
+    console.log(answer)
+    return answer;
+},
+
+addName: function (firstName, middleName, lastName){
+    let queryString = `INSERT INTO Name(first_name, middle_name, last_name) VALUES("${firstName}", "${middleName}", "${lastName}");`;
 
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
     })
 },
 
-addUser: function (userID, nameID, addressID, phoneNum, emailAddr, birthday){
-    let queryString = `INSERT INTO User VALUES(${userID}, ${nameID}, ${addressID}, ${phoneNum}, ${emailAddr}, ${birthday});`;
-
+getNameID: function(firstName, middleName, lastName){
+    let queryString = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
+    var answer;
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
+        return callback(JSON.stringify(result[0].name_id));
+    })
+},
+
+addUser: function (nameID, addressID, phoneNum, emailAddr, birthday){
+    let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}");`;
+    
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;
     })
 },
 

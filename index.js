@@ -22,12 +22,12 @@ app.listen(port, () => {
 
 //URL ROUTES
 
-router.get('/test', (req,res) => {
+router.get('/', (req,res) => {
     res.sendFile(__dirname+"/index.html")
 })
 
-router.get('/', (req, res) => {
-    res.send("hello world")
+router.get('/signup', (req, res) => {
+  res.sendFile(__dirname+"/signup.html")
 })
 
 // TO GET USERS?
@@ -41,4 +41,23 @@ router.post('/api/select', (req,res) => {
   res.end();
 })
 
+router.post('/login/password', passport.authenticate('local', {
+  successReturnToOrRedirect: '/',
+  failureRedirect: '/login',
+  failureMessage: true
+}));
 
+router.post('/signup', (req, res) => {
+  console.log(req.body);
+  let stringified = JSON.stringify(req.body)
+  let body = JSON.parse(stringified);
+  console.log(body)
+  db.addName(body.firstName, body.middleName, body.lastName);
+  db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
+  let nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
+  let addrId = db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
+  db.addUser(nameId, addrId, body.phoneNum, body.email, body.birthday);
+  res.end();
+})
+
+db.getNameID("Chief", "Keef", "Sosa");
