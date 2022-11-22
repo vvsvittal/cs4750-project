@@ -2,6 +2,7 @@ const db = require('./static/database.js')
 
 const path = require('path')
 const express = require('express')
+const passport = require('passport')
 const app = express()
 const router = express.Router()
 const port = 3000
