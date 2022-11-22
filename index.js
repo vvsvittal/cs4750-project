@@ -29,6 +29,11 @@ router.get('/', (req, res) => {
     res.send("hello world")
 })
 
+// TO GET USERS?
+// router.get('/users', (req,res) => {
+//   res.send(db.viewUsers());
+// })
+
 router.post('/api/select', (req,res) => {
   console.log(req.body.textbox);
   db.selectAny(req.body.textbox);
