@@ -1,3 +1,5 @@
+import 'bootstrap';
+
 const db = require('./static/database.js')
 
 const path = require('path')
@@ -28,6 +30,12 @@ router.get('/test', (req,res) => {
 router.get('/', (req, res) => {
     res.send("hello world")
 })
+
+router.get('/home', (req, res) => {
+  res.sendFile(__dirname+"/welcome.html")
+})
+
+
 
 // TO GET USERS?
 // router.get('/users', (req,res) => {

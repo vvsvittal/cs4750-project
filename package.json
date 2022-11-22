@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/aneeshvittal1/cs4750-project#readme",
   "dependencies": {
+    "bootstrap": "^5.2.3",
     "express": "^4.18.2",
     "mysql": "^2.18.1"
   }
