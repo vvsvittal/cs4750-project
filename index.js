@@ -37,6 +37,10 @@ router.get('/home', (req, res) => {
   res.sendFile(__dirname+"/welcome.html")
 })
 
+router.get('/lists', (req, res) => {
+  res.sendFile(__dirname+"/lists.html")
+})
+
 
 
 // TO GET USERS?
