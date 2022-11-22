@@ -1,0 +1,9 @@
+Install the following NPM Packages with
+
+npm install <package name>
+
+Packages:
+
+express
+mysql
+
