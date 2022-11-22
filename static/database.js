@@ -20,14 +20,14 @@ sql.connect(function(err){
 //     })
 // })
 
-
-function closeConnection(){
+module.exports ={
+closeConnection: function (){
     sql.end(() => {
     console.log("DB Connection Closed");
 });
-}
+},
 
-function addUser(userID, nameID, addressID, phoneNum, emailAddr, birthday){
+addUser: function (userID, nameID, addressID, phoneNum, emailAddr, birthday){
     let queryString = `INSERT INTO User VALUES(${userID}, ${nameID}, ${addressID}, ${phoneNum}, ${emailAddr}, ${birthday});`;
 
     sql.query(queryString, function(error, result){
@@ -38,22 +38,9 @@ function addUser(userID, nameID, addressID, phoneNum, emailAddr, birthday){
             console.log(r);
         })
     })
-}
+},
 
-function addUser(userID, nameID, addressID, phoneNum, emailAddr, birthday){
-    let queryString = `INSERT INTO User VALUES(${userID}, ${nameID}, ${addressID}, ${phoneNum}, ${emailAddr}, ${birthday});`;
-
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
-    })
-}
-
-function selectAny(tableName){
+selectAny: function (tableName){
     let queryString = `SELECT * FROM ${tableName};`
 
     sql.query(queryString, function(error, result){
@@ -64,6 +51,7 @@ function selectAny(tableName){
             console.log(r);
         })
     })
+},
 }
 
 //selectAny("Creates");

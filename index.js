@@ -1,4 +1,4 @@
-require('./static/database.js')
+const db = require('./static/database.js')
 
 const path = require('path')
 const express = require('express')
@@ -31,6 +31,7 @@ router.get('/', (req, res) => {
 
 router.post('/api/select', (req,res) => {
   console.log(req.body.textbox);
+  db.selectAny(req.body.textbox);
   res.end();
 })
 
