@@ -1,4 +1,3 @@
-import 'bootstrap';
 
 const db = require('./static/database.js')
 
@@ -11,6 +10,9 @@ const port = 3000
 app.use(express.urlencoded({ extended: true }));
 // EXPRESS SERVER CONFIG
 app.use('/', router)
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 
 app.use(express.static(path.join(__dirname, 'static')));
 

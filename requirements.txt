@@ -7,4 +7,5 @@ Packages:
 express
 mysql
 bootstrap
+jquery
 
