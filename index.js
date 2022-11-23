@@ -1,8 +1,10 @@
+
 const db = require('./static/database.js')
 
 const path = require('path')
 const express = require('express')
 const passport = require('passport')
+const { getAddressID } = require('./static/database.js')
 const app = express()
 const router = express.Router()
 const port = 3000
@@ -10,6 +12,9 @@ const port = 3000
 app.use(express.urlencoded({ extended: true }));
 // EXPRESS SERVER CONFIG
 app.use('/', router)
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
 
 app.use(express.static(path.join(__dirname, 'static')));
 
@@ -29,6 +34,16 @@ router.get('/', (req,res) => {
 router.get('/signup', (req, res) => {
   res.sendFile(__dirname+"/signup.html")
 })
+
+router.get('/home', (req, res) => {
+  res.sendFile(__dirname+"/welcome.html")
+})
+
+router.get('/lists', (req, res) => {
+  res.sendFile(__dirname+"/lists.html")
+})
+
+
 
 // TO GET USERS?
 // router.get('/users', (req,res) => {
@@ -50,26 +65,13 @@ router.post('/login/password', passport.authenticate('local', {
 router.post('/signup', (req, res) => {
   let stringified = JSON.stringify(req.body)
   let body = JSON.parse(stringified);
-  var nameId;
-  console.log(body);
-  function dbAddName(b, callback) {
-    db.addName(b.firstName, b.middleName, b.lastName);
-    console.log("added name");
-    nameId = db.getNameID(b.firstName, b.middleName, b.lastName)
-    callback();
-  }
-  function dbGetNameId() {
-    console.log("getting Name");
-    console.log(nameId);
-  }
-
-  dbAddName(body, dbGetNameId);
-  // db.addName(body.firstName, body.middleName, body.lastName);
-  // var nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
-  // var nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
-  // console.log(nameId);
-  // db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
-  // let addrId = db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
-  // db.addUser(nameId, addrId, body.phoneNum, body.email, body.birthday);
+  console.log(body)
+  db.addName(body.firstName, body.middleName, body.lastName);
+  db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
+  db.getNameID(body.firstName, body.middleName, body.lastName).then(nameID => {
+    db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber).then(addrID => {
+      db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday, body.pwd);
+    })
+  })
   res.end();
 })

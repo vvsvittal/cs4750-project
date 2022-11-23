@@ -7,4 +7,6 @@ Packages:
 express
 mysql
 passport
-
+bootstrap
+jquery
+bcrypt

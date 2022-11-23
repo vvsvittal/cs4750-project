@@ -1,4 +1,5 @@
 const database = require('mysql')
+const bcrypt = require("bcrypt")
 
 var sql = database.createConnection({
     host: "35.245.66.156",
@@ -28,51 +29,53 @@ addAddress: function (houseNumber, street, city, state, zipCode, aptNumber){
 },
 
 getAddressID: function(houseNumber, street, city, state, zipCode, aptNumber){
-    let queryString = `SELECT address_id FROM Address WHERE house_number = ${houseNumber} AND street = "${street}" AND city = "${city}" AND state = "${state}" AND zip_code = "${zipCode}" AND apt_number = "${aptNumber}";`;
-    var answer;
-    sql.query(queryString, function(error, result){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT address_id FROM Address WHERE house_number = ${houseNumber} AND street = "${street}" AND city = "${city}" AND state = "${state}" AND zip_code = "${zipCode}" AND apt_number = "${aptNumber}";`;
+        sql.query(queryString, function(error, result){
         if (error)
-            throw error;
-        answer= JSON.stringify(result[0].address_id);
-    })
-    console.log(answer)
-    return answer;
+            return reject(error);
+        resolve(JSON.stringify(result[0].address_id));
+    });
+});
+    
 },
 
 addName: function (firstName, middleName, lastName){
+
     let queryString = `INSERT INTO Name(first_name, middle_name, last_name) VALUES("${firstName}", "${middleName}", "${lastName}");`;
 
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
+        console.log("Added User Successfully")
     })
 },
 
 getNameID: function(firstName, middleName, lastName){
-    let queryStr = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
-    var ret;
-    function dbAddName(queryString, callback) {
-        sql.query(queryString, function(error, result){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
+        sql.query(queryString, function (error, result){
             if (error)
-                throw error;
-            ret = JSON.stringify(result[0].name_id);
-            console.log(ret);
-        })
-        callback();
-    }
-    dbAddName(queryStr, function() {
-        console.log(ret);
-        return ret;
-    })
+                return reject(error);
+            resolve(JSON.stringify(result[0].name_id))
+        });
+    });
 },
 
-addUser: function (nameID, addressID, phoneNum, emailAddr, birthday){
-    let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}");`;
+addUser: function (nameID, addressID, phoneNum, emailAddr, birthday, pwd){
+
+    bcrypt.hash(pwd, 10, function(err, hash) {
+    // store hash in the database
+    let hash_pwd = hash;
+    // console.log(pwd, hash);
+    let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate, pwd) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}", "${hash_pwd}");`;
     
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
     })
+    });
+
 },
 
 deleteUser: function (userID){
