@@ -29,15 +29,15 @@ addAddress: function (houseNumber, street, city, state, zipCode, aptNumber){
 },
 
 getAddressID: function(houseNumber, street, city, state, zipCode, aptNumber){
-    let queryString = `SELECT address_id FROM Address WHERE house_number = ${houseNumber} AND street = "${street}" AND city = "${city}" AND state = "${state}" AND zip_code = "${zipCode}" AND apt_number = "${aptNumber}";`;
-    var answer;
-    sql.query(queryString, function(error, result){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT address_id FROM Address WHERE house_number = ${houseNumber} AND street = "${street}" AND city = "${city}" AND state = "${state}" AND zip_code = "${zipCode}" AND apt_number = "${aptNumber}";`;
+        sql.query(queryString, function(error, result){
         if (error)
-            throw error;
-        answer= JSON.stringify(result[0].address_id);
-    })
-    console.log(answer)
-    return answer;
+            return reject(error);
+        resolve(JSON.stringify(result[0].address_id));
+    });
+});
+    
 },
 
 addName: function (firstName, middleName, lastName){
@@ -46,17 +46,19 @@ addName: function (firstName, middleName, lastName){
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
+        console.log("Added User Successfully")
     })
 },
 
 getNameID: function(firstName, middleName, lastName){
-    let queryString = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
-    var answer;
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        return JSON.stringify(result[0].name_id);
-    })
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
+        sql.query(queryString, function (error, result){
+            if (error)
+                return reject(error);
+            resolve(JSON.stringify(result[0].name_id))
+        });
+    });
 },
 
 addUser: function (nameID, addressID, phoneNum, emailAddr, birthday){

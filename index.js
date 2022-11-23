@@ -3,6 +3,7 @@ const db = require('./static/database.js')
 const path = require('path')
 const express = require('express')
 const passport = require('passport')
+const { getAddressID } = require('./static/database.js')
 const app = express()
 const router = express.Router()
 const port = 3000
@@ -54,10 +55,10 @@ router.post('/signup', (req, res) => {
   console.log(body)
   db.addName(body.firstName, body.middleName, body.lastName);
   db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
-  let nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
-  let addrId = db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
-  db.addUser(nameId, addrId, body.phoneNum, body.email, body.birthday);
+  db.getNameID(body.firstName, body.middleName, body.lastName).then(nameID => {
+    db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber).then(addrID => {
+      db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday);
+    })
+  })
   res.end();
 })
-
-db.getNameID("Chief", "Keef", "Sosa");
