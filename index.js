@@ -4,6 +4,7 @@ const db = require('./static/database.js')
 const path = require('path')
 const express = require('express')
 const passport = require('passport')
+const { getAddressID } = require('./static/database.js')
 const app = express()
 const router = express.Router()
 const port = 3000
@@ -26,12 +27,12 @@ app.listen(port, () => {
 
 //URL ROUTES
 
-router.get('/test', (req,res) => {
+router.get('/', (req,res) => {
     res.sendFile(__dirname+"/index.html")
 })
 
-router.get('/', (req, res) => {
-    res.send("hello world")
+router.get('/signup', (req, res) => {
+  res.sendFile(__dirname+"/signup.html")
 })
 
 router.get('/home', (req, res) => {
@@ -55,4 +56,23 @@ router.post('/api/select', (req,res) => {
   res.end();
 })
 
+router.post('/login/password', passport.authenticate('local', {
+  successReturnToOrRedirect: '/',
+  failureRedirect: '/login',
+  failureMessage: true
+}));
 
+router.post('/signup', (req, res) => {
+  console.log(req.body);
+  let stringified = JSON.stringify(req.body)
+  let body = JSON.parse(stringified);
+  console.log(body)
+  db.addName(body.firstName, body.middleName, body.lastName);
+  db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
+  db.getNameID(body.firstName, body.middleName, body.lastName).then(nameID => {
+    db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber).then(addrID => {
+      db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday);
+    })
+  })
+  res.end();
+})
