@@ -39,8 +39,20 @@ router.get('/home', (req, res) => {
   res.sendFile(__dirname+"/welcome.html")
 })
 
+router.get('/home/newlist', (req, res) => {
+  res.sendFile(__dirname+"/new_list.html")
+})
+
 router.get('/lists', (req, res) => {
   res.sendFile(__dirname+"/lists.html")
+})
+
+router.get('/favorites', (req, res) => {
+  res.sendFile(__dirname+"/favorites.html")
+})
+
+router.get('/about', (req, res) => {
+  res.sendFile(__dirname+"/about.html")
 })
 
 
