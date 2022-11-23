@@ -48,16 +48,28 @@ router.post('/login/password', passport.authenticate('local', {
 }));
 
 router.post('/signup', (req, res) => {
-  console.log(req.body);
   let stringified = JSON.stringify(req.body)
   let body = JSON.parse(stringified);
-  console.log(body)
-  db.addName(body.firstName, body.middleName, body.lastName);
-  db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
-  let nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
-  let addrId = db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
-  db.addUser(nameId, addrId, body.phoneNum, body.email, body.birthday);
+  var nameId;
+  console.log(body);
+  function dbAddName(b, callback) {
+    db.addName(b.firstName, b.middleName, b.lastName);
+    console.log("added name");
+    nameId = db.getNameID(b.firstName, b.middleName, b.lastName)
+    callback();
+  }
+  function dbGetNameId() {
+    console.log("getting Name");
+    console.log(nameId);
+  }
+
+  dbAddName(body, dbGetNameId);
+  // db.addName(body.firstName, body.middleName, body.lastName);
+  // var nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
+  // var nameId = db.getNameID(body.firstName, body.middleName, body.lastName);
+  // console.log(nameId);
+  // db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
+  // let addrId = db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
+  // db.addUser(nameId, addrId, body.phoneNum, body.email, body.birthday);
   res.end();
 })
-
-db.getNameID("Chief", "Keef", "Sosa");

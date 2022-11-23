@@ -21,7 +21,6 @@ closeConnection: function (){
 
 addAddress: function (houseNumber, street, city, state, zipCode, aptNumber){
     let queryString = `INSERT INTO Address(house_number, street, city, state, zip_code, apt_number) VALUES(${houseNumber}, "${street}", "${city}", "${state}", ${zipCode}, "${aptNumber}");`;
-
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
@@ -50,12 +49,20 @@ addName: function (firstName, middleName, lastName){
 },
 
 getNameID: function(firstName, middleName, lastName){
-    let queryString = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
-    var answer;
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        return JSON.stringify(result[0].name_id);
+    let queryStr = `SELECT name_id FROM Name WHERE first_name = "${firstName}" AND middle_name = "${middleName}" AND last_name = "${lastName}";`
+    var ret;
+    function dbAddName(queryString, callback) {
+        sql.query(queryString, function(error, result){
+            if (error)
+                throw error;
+            ret = JSON.stringify(result[0].name_id);
+            console.log(ret);
+        })
+        callback();
+    }
+    dbAddName(queryStr, function() {
+        console.log(ret);
+        return ret;
     })
 },
 
