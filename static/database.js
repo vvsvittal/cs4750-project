@@ -55,7 +55,7 @@ getNameID: function(firstName, middleName, lastName){
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        return callback(JSON.stringify(result[0].name_id));
+        return JSON.stringify(result[0].name_id);
     })
 },
 
