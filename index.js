@@ -39,6 +39,10 @@ router.get('/home', (req, res) => {
   res.sendFile(__dirname+"/welcome.html")
 })
 
+router.get('/home/newlist', (req, res) => {
+  res.sendFile(__dirname+"/new_list.html")
+})
+
 router.get('/lists', (req, res) => {
   res.sendFile(__dirname+"/lists.html")
 })
