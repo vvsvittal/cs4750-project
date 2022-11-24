@@ -28,9 +28,20 @@
     
     
   </head>
-  <body>
+  <body onload="getFavorites()">
     <h3 style="display:inline;"> Favorites! </h3>
     <a href="/lists" target="_parent"><button><i class="fa fa-minus"></i></a>
+    <div id = "favoritesList"></div>
+
+    <script>
+      function getFavorites(){
+        fetch('/getFavorites').then(res =>{
+          
+
+        })
+
+      }
+    </script>
     <!-- <button class="btn"></button> -->
 
     <!-- Optional JavaScript -->

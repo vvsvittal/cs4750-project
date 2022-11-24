@@ -82,6 +82,9 @@ router.get('/about', (req, res) => {
   res.sendFile(__dirname+"/about.html")
 })
 
+router.get('/getFavorites', (req,res) => {
+  db.
+})
 
 router.get('/logout', (req,res) => {
   if(req.session.loggedin){

@@ -232,16 +232,22 @@ viewItems: function (){
 },
 
 viewFavorites: function (userID){
-    let queryString = `SELECT * FROM Favorites WHERE user_id=${userID};`;
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM Favorites WHERE user_id=${userID};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
+
+
     })
+    
 },
 
 viewBuys: function (userID){
