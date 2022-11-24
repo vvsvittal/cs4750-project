@@ -1,4 +1,5 @@
 const database = require('mysql')
+const bcrypt = require("bcrypt")
 
 var sql = database.createConnection({
     host: "35.245.66.156",
@@ -21,7 +22,6 @@ closeConnection: function (){
 
 addAddress: function (houseNumber, street, city, state, zipCode, aptNumber){
     let queryString = `INSERT INTO Address(house_number, street, city, state, zip_code, apt_number) VALUES(${houseNumber}, "${street}", "${city}", "${state}", ${zipCode}, "${aptNumber}");`;
-
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
@@ -41,12 +41,12 @@ getAddressID: function(houseNumber, street, city, state, zipCode, aptNumber){
 },
 
 addName: function (firstName, middleName, lastName){
+
     let queryString = `INSERT INTO Name(first_name, middle_name, last_name) VALUES("${firstName}", "${middleName}", "${lastName}");`;
 
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        console.log("Added User Successfully")
     })
 },
 
@@ -61,13 +61,17 @@ getNameID: function(firstName, middleName, lastName){
     });
 },
 
-addUser: function (nameID, addressID, phoneNum, emailAddr, birthday){
-    let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}");`;
+addUser: function (nameID, addressID, phoneNum, emailAddr, birthday, pwd){
+
+    bcrypt.hash(pwd, 10).then(hashed => {
+        let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate, pwd) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}", "${hashed}");`;
     
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
+        sql.query(queryString, function(error, result){
+            if (error)
+                throw error;
     })
+        console.log("User added with pass", hashed);
+});
 },
 
 deleteUser: function (userID){
@@ -81,6 +85,20 @@ deleteUser: function (userID){
             console.log(r);
         })
     })
+},
+
+getPwdByEmail: function(emailAddr){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT pwd FROM User WHERE email = "${emailAddr}";`
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(null);
+            if(result.length != 0)
+                resolve(result[0].pwd);
+            else
+                resolve(null)
+        })
+    });
 },
 
 viewUsers: function (){

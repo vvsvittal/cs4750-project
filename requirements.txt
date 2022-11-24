@@ -5,8 +5,8 @@ npm install <package name>
 Packages:
 
 express
+express-session
 mysql
 passport
-bootstrap
-jquery
-
+passport-local
+bcrypt

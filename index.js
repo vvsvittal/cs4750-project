@@ -3,11 +3,18 @@ const db = require('./static/database.js')
 
 const path = require('path')
 const express = require('express')
-const passport = require('passport')
-const { getAddressID } = require('./static/database.js')
+const session = require('express-session')
+const hasher = require('bcrypt')
+
 const app = express()
 const router = express.Router()
 const port = 3000
+
+app.use(session({
+	secret: 'authSecret',
+	resave: true,
+	saveUninitialized: true
+}));
 
 app.use(express.urlencoded({ extended: true }));
 // EXPRESS SERVER CONFIG
@@ -36,7 +43,10 @@ router.get('/signup', (req, res) => {
 })
 
 router.get('/home', (req, res) => {
-  res.sendFile(__dirname+"/welcome.html")
+  if(req.session.loggedin)
+    res.sendFile(__dirname+"/welcome.html")
+  else
+    res.send("Please Log in before trying this action")
 })
 
 router.get('/home/newlist', (req, res) => {
@@ -47,6 +57,23 @@ router.get('/lists', (req, res) => {
   res.sendFile(__dirname+"/lists.html")
 })
 
+router.post('/login/validate', (req,res) => {
+  let str = JSON.stringify(req.body);
+  let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
+    db.getPwdByEmail(user).then(out => {
+        hasher.compare(pw, out).then(isValid => {
+          if (isValid){
+            req.session.loggedin = true;
+            req.session.username = user;
+            res.redirect('/home')
+            return
+          }
+          else
+            res.send("Incorrect Username/Password");
+            return
+        })
+    })
+});
 router.get('/favorites', (req, res) => {
   res.sendFile(__dirname+"/favorites.html")
 })
@@ -56,26 +83,17 @@ router.get('/about', (req, res) => {
 })
 
 
+router.get('/logout', (req,res) => {
+  if(req.session.loggedin){
+    req.session.loggedin = false;
+    res.redirect('/')
+  }
+  else
+    res.send("Please Log in before trying this action")
 
-// TO GET USERS?
-// router.get('/users', (req,res) => {
-//   res.send(db.viewUsers());
-// })
-
-router.post('/api/select', (req,res) => {
-  console.log(req.body.textbox);
-  db.selectAny(req.body.textbox);
-  res.end();
 })
 
-router.post('/login/password', passport.authenticate('local', {
-  successReturnToOrRedirect: '/',
-  failureRedirect: '/login',
-  failureMessage: true
-}));
-
 router.post('/signup', (req, res) => {
-  console.log(req.body);
   let stringified = JSON.stringify(req.body)
   let body = JSON.parse(stringified);
   console.log(body)
@@ -83,8 +101,9 @@ router.post('/signup', (req, res) => {
   db.addAddress(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber);
   db.getNameID(body.firstName, body.middleName, body.lastName).then(nameID => {
     db.getAddressID(body.houseNumber, body.street, body.city, body.state, body.zipcode, body.aptNumber).then(addrID => {
-      db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday);
+      db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday, body.pwd);
     })
   })
   res.end();
 })
+
