@@ -67,7 +67,7 @@ addUser: function (nameID, addressID, phoneNum, emailAddr, birthday, pwd){
     bcrypt.hash(pwd, 10, function(err, hash) {
     // store hash in the database
     let hash_pwd = hash;
-    // console.log(pwd, hash);
+    console.log(hash_pwd);
     let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate, pwd) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}", "${hash_pwd}");`;
     
     sql.query(queryString, function(error, result){
