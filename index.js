@@ -1,4 +1,5 @@
 
+
 const db = require('./static/database.js')
 
 const path = require('path')
@@ -53,6 +54,16 @@ router.get('/home/newlist', (req, res) => {
   res.sendFile(__dirname+"/new_list.html")
 })
 
+router.post('/home/newlist', (req, res) => {
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  console.log(req.session.username)
+  db.addList(body.list_name,parseInt(0),todayDate,parseInt(req.session.userid));
+  res.redirect('/home')
+  res.end();
+})
+
 router.get('/lists', (req, res) => {
   res.sendFile(__dirname+"/lists.html")
 })
@@ -60,19 +71,22 @@ router.get('/lists', (req, res) => {
 router.post('/login/validate', (req,res) => {
   let str = JSON.stringify(req.body);
   let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
+  db.getIdByEmail(user).then(val => {
     db.getPwdByEmail(user).then(out => {
-        hasher.compare(pw, out).then(isValid => {
-          if (isValid){
-            req.session.loggedin = true;
-            req.session.username = user;
-            res.redirect('/home')
-            return
-          }
-          else
-            res.send("Incorrect Username/Password");
-            return
-        })
-    })
+      hasher.compare(pw, out).then(isValid => {
+        if (isValid){
+          req.session.loggedin = true;
+          req.session.username = user;
+          req.session.userid = val;
+          res.redirect('/home')
+          return
+        }
+        else
+          res.send("Incorrect Username/Password");
+      })
+  })
+  }) 
+
 });
 router.get('/favorites', (req, res) => {
   res.sendFile(__dirname+"/favorites.html")
@@ -110,6 +124,7 @@ router.post('/signup', (req, res) => {
       db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday, body.pwd);
     })
   })
+  res.redirect('/')
   res.end();
 })
 
