@@ -107,8 +107,10 @@ getIdByEmail: function(emailAddr){
         sql.query(queryString, function(error, result){
             if (error)
                 return reject(null);
-            if(result.length != 0)
-                resolve(result[0].userID);
+            if(result.length != 0) {
+                console.log(result[0].user_id)
+                resolve(result[0].user_id);
+            }
             else
                 resolve(null)
         })
@@ -168,7 +170,7 @@ viewStores: function (){
 },
 
 addList: function (listName, totalItems, lastUpdate, belongsTo){
-    let queryString = `INSERT INTO Grocery_List VALUES(${listName}, ${totalItems}, ${lastUpdate}, ${belongsTo});`;
+    let queryString = `INSERT INTO Grocery_List(list_name, total_items, last_update, belongs_to) VALUES("${listName}", ${totalItems}, "${lastUpdate}", ${belongsTo});`;
 
     sql.query(queryString, function(error, result){
         if (error)
@@ -203,8 +205,8 @@ viewLists: function (){
     })
 },
 
-addItem: function (itemID, description, price, quantity, purchaseDate, expirationDate, category,  belongsTo){
-    let queryString = `INSERT INTO Item VALUES(${itemID}, ${description}, ${price}, ${quantity}, ${purchaseDate}, ${expirationDate}, ${category}, ${belongsTo});`;
+addItem: function (description, price, quantity, purchaseDate, expirationDate, category,  belongsTo){
+    let queryString = `INSERT INTO Item(description, price, quantity, purchase_date, expiration_date, category, belongs_to) VALUES(${description}, ${price}, ${quantity}, ${purchaseDate}, ${expirationDate}, ${category}, ${belongsTo});`;
 
     sql.query(queryString, function(error, result){
         if (error)

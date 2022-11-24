@@ -55,11 +55,12 @@ router.get('/home/newlist', (req, res) => {
 })
 
 router.post('/home/newlist', (req, res) => {
-  let newlst = JSON.stringify(req.body);
-  let parsed = JSON.parse(newlst);
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
   var todayDate = new Date().toISOString().slice(0, 10);
   console.log(req.session.username)
-  db.addList(parsed.list_name,todayDate,req.session.userid);
+  db.addList(body.list_name,parseInt(0),todayDate,parseInt(req.session.userid));
+  res.redirect('/home')
   res.end();
 })
 
