@@ -34,12 +34,14 @@
     <div id = "favoritesList"></div>
 
     <script>
-      function getFavorites(){
-        fetch('/getFavorites').then(res =>{
-          
-
+      async function getFavorites(){
+        let res = await fetch('/getFavorites').then(conv => {
+          let prom = conv.json().then(data => {
+            console.log(data[0])
+            console.log(data[0].user_id)
+            console.log(data[0].item_id)
+          })
         })
-
       }
     </script>
     <!-- <button class="btn"></button> -->

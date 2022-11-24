@@ -83,7 +83,10 @@ router.get('/about', (req, res) => {
 })
 
 router.get('/getFavorites', (req,res) => {
-  db.
+  db.viewFavorites(320).then(favs => {
+    console.log(favs);
+    res.send(JSON.stringify(favs));
+  })
 })
 
 router.get('/logout', (req,res) => {
