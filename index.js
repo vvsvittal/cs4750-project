@@ -3,11 +3,20 @@ const db = require('./static/database.js')
 
 const path = require('path')
 const express = require('express')
+const session = require('express-session')
 const passport = require('passport')
+const hasher = require('bcrypt')
 const { getAddressID } = require('./static/database.js')
+const { request } = require('http')
 const app = express()
 const router = express.Router()
 const port = 3000
+
+app.use(session({
+	secret: 'authSecret',
+	resave: true,
+	saveUninitialized: true
+}));
 
 app.use(express.urlencoded({ extended: true }));
 // EXPRESS SERVER CONFIG
@@ -36,31 +45,43 @@ router.get('/signup', (req, res) => {
 })
 
 router.get('/home', (req, res) => {
-  res.sendFile(__dirname+"/welcome.html")
+  if(req.session.loggedin)
+    res.sendFile(__dirname+"/welcome.html")
+  else
+    res.send("Please Log in before trying this action")
 })
 
 router.get('/lists', (req, res) => {
   res.sendFile(__dirname+"/lists.html")
 })
 
+router.post('/login/validate', (req,res) => {
+  let str = JSON.stringify(req.body);
+  let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
+    db.getPwdByEmail(user).then(out => {
+        hasher.compare(pw, out).then(isValid => {
+          if (isValid){
+            req.session.loggedin = true;
+            req.session.username = user;
+            res.redirect('/home')
+            return
+          }
+          else
+            res.send("Incorrect Username/Password");
+            return
+        })
+    })
+});
 
+router.get('/logout', (req,res) => {
+  if(req.session.loggedin){
+    req.session.loggedin = false;
+    res.redirect('/')
+  }
+  else
+    res.send("Please Log in before trying this action")
 
-// TO GET USERS?
-// router.get('/users', (req,res) => {
-//   res.send(db.viewUsers());
-// })
-
-router.post('/api/select', (req,res) => {
-  console.log(req.body.textbox);
-  db.selectAny(req.body.textbox);
-  res.end();
 })
-
-router.post('/login/password', passport.authenticate('local', {
-  successReturnToOrRedirect: '/',
-  failureRedirect: '/login',
-  failureMessage: true
-}));
 
 router.post('/signup', (req, res) => {
   let stringified = JSON.stringify(req.body)
@@ -75,3 +96,4 @@ router.post('/signup', (req, res) => {
   })
   res.end();
 })
+

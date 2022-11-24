@@ -47,7 +47,6 @@ addName: function (firstName, middleName, lastName){
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        console.log("Added User Successfully")
     })
 },
 
@@ -64,18 +63,15 @@ getNameID: function(firstName, middleName, lastName){
 
 addUser: function (nameID, addressID, phoneNum, emailAddr, birthday, pwd){
 
-    bcrypt.hash(pwd, 10, function(err, hash) {
-    // store hash in the database
-    let hash_pwd = hash;
-    // console.log(pwd, hash);
-    let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate, pwd) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}", "${hash_pwd}");`;
+    bcrypt.hash(pwd, 10).then(hashed => {
+        let queryString = `INSERT INTO User(name_id, address_id, phone_number, email, birthdate, pwd) VALUES(${nameID}, ${addressID}, "${phoneNum}", "${emailAddr}", "${birthday}", "${hashed}");`;
     
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
+        sql.query(queryString, function(error, result){
+            if (error)
+                throw error;
     })
-    });
-
+        console.log("User added with pass", hashed);
+});
 },
 
 deleteUser: function (userID){
@@ -89,6 +85,20 @@ deleteUser: function (userID){
             console.log(r);
         })
     })
+},
+
+getPwdByEmail: function(emailAddr){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT pwd FROM User WHERE email = "${emailAddr}";`
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(null);
+            if(result.length != 0)
+                resolve(result[0].pwd);
+            else
+                resolve(null)
+        })
+    });
 },
 
 viewUsers: function (){
