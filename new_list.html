@@ -3,7 +3,6 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/home">Grocery List</a>
-        <i class="fa-regular fa-cart-shopping"></i>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -12,9 +11,9 @@
         <!-- Items -->
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/logout">Logout</span></a>
-            <a class="nav-item nav-link" href="/favorites">Favorites</a>
+            <a class="nav-item nav-link" href="/test">Logout</span></a>
             <a class="nav-item nav-link" href="/lists">Lists</a>
+            <a class="nav-item nav-link" href="/home">Home</a>
             <a class="nav-item nav-link" href="/about" >About</a>
           </div>
         </div> 
@@ -30,9 +29,11 @@
     
   </head>
   <body>
-    <h3 style="display:inline;"> My Lists </h3>
-    <a href="/home/newlist" target="_parent"><button><i class="fa fa-plus"></i></button></a>
-    <!-- <button class="btn"></button> -->
+    <form>
+        <label for="list_name">List Name:</label><br>
+        <input type="text" id="list_name" name="fname"><br>
+        <input type="submit" value="Submit" />
+    </form>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -41,3 +42,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </body>
 </html>
+
+
+

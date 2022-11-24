@@ -4,10 +4,8 @@ const db = require('./static/database.js')
 const path = require('path')
 const express = require('express')
 const session = require('express-session')
-const passport = require('passport')
 const hasher = require('bcrypt')
-const { getAddressID } = require('./static/database.js')
-const { request } = require('http')
+
 const app = express()
 const router = express.Router()
 const port = 3000
@@ -51,6 +49,10 @@ router.get('/home', (req, res) => {
     res.send("Please Log in before trying this action")
 })
 
+router.get('/home/newlist', (req, res) => {
+  res.sendFile(__dirname+"/new_list.html")
+})
+
 router.get('/lists', (req, res) => {
   res.sendFile(__dirname+"/lists.html")
 })
@@ -72,6 +74,14 @@ router.post('/login/validate', (req,res) => {
         })
     })
 });
+router.get('/favorites', (req, res) => {
+  res.sendFile(__dirname+"/favorites.html")
+})
+
+router.get('/about', (req, res) => {
+  res.sendFile(__dirname+"/about.html")
+})
+
 
 router.get('/logout', (req,res) => {
   if(req.session.loggedin){
