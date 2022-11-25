@@ -64,8 +64,9 @@ router.post('/home/newlist', (req, res) => {
   res.end();
 })
 
-router.get('/lists', (req, res) => {
-  res.sendFile(__dirname+"/lists.html")
+router.get('/list/:listID', (req, res) => {
+  res.send("List ID is " + req.params.listID);
+  //res.sendFile(__dirname+"/listView.html")
 })
 
 router.post('/login/validate', (req,res) => {
