@@ -14,7 +14,7 @@
           <div class="navbar-nav">
             <a class="nav-item nav-link" href="/logout">Logout</span></a>
             <a class="nav-item nav-link" href="/favorites">Favorites</a>
-            <a class="nav-item nav-link" href="/lists">Lists</a>
+            <!-- <a class="nav-item nav-link" href="/lists">Lists</a>   --> 
             <a class="nav-item nav-link" href="/about" >About</a>
           </div>
         </div> 
@@ -29,11 +29,65 @@
     
     
   </head>
-  <body>
+  <h2 style="text-align:center"> Welcome Back!</h2>
+  <body onload="getMyLists()">
     <h3 style="display:inline;"> My Lists </h3>
     <a href="/home/newlist" target="_parent"><button><i class="fa fa-plus"></i></button></a>
     <!-- <button class="btn"></button> -->
+    <div id="listTableDiv">
+    
+    <table id = "listTable" style="display:none">
+      <tr>
+        <th>List Name</th>
+        <th>Total Items</th>
+        <th>Last Update</th>
+      </tr>
+    </table>
+    </div>
 
+
+
+
+
+    <script>
+      async function getMyLists(){
+        let myLists = await fetch('/getMyLists').then(res => {
+          res.json().then(data => {
+            console.log(data);
+            if(data == null){ //No lists were found
+              let tableDiv = document.getElementById("listTableDiv");
+              let dispMessage = document.createElement("p")
+              dispMessage.innerHTML = "Create a list to get started!";
+              tableDiv.appendChild(dispMessage);
+            }
+            else{ //If lists were found for the current user
+              let table = document.getElementById("listTable");
+              table.style.display = "";
+              data.forEach(element => {
+                let newRow = document.createElement("tr");
+                let name = document.createElement("td");
+                let link = document.createElement("a");
+                link.href = "/";
+                link.append(document.createTextNode(element.list_name));
+                name.appendChild(link)
+                let totItems = document.createElement("td");
+                totItems.appendChild(document.createTextNode(element.total_items))
+                let lastUpdate = document.createElement("td");
+                lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
+                newRow.appendChild(name);
+                newRow.appendChild(totItems);
+                newRow.appendChild(lastUpdate);
+                table.append(newRow);
+              });
+            } 
+
+          })
+        });
+
+    }
+    
+    
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

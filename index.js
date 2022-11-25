@@ -103,6 +103,12 @@ router.get('/getFavorites', (req,res) => {
   })
 })
 
+router.get('/getMyLists', (req, res) => {
+  db.viewListsByUser(req.session.userid).then(lists => {
+    res.send(JSON.stringify(lists))
+  })
+})
+
 router.get('/logout', (req,res) => {
   if(req.session.loggedin){
     req.session.loggedin = false;

@@ -192,15 +192,18 @@ deleteList: function (listID){
     })
 },
 
-viewLists: function (){
-    let queryString = `SELECT * FROM Grocery_List;`;
+viewListsByUser: function (userid){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM Grocery_List WHERE belongs_to =${userid};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
     })
 },
