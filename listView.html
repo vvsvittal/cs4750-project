@@ -68,7 +68,7 @@ function func(){
               let table = document.getElementById("itemTable"); //description, price, quantity, purchaseDate, expirationDate, category
               table.style.display = "";
               data.forEach(element => {
-                let newRow = document.createElement("tr");
+                let newRow = document.createElement("tr"); //create new row in table
                 let description = document.createElement("td");
                 description.appendChild(document.createTextNode(element.description))
                 let price = document.createElement("td");
@@ -76,9 +76,9 @@ function func(){
                 let quantity = document.createElement("td");
                 quantity.appendChild(document.createTextNode(element.quantity))
                 let purchaseDate = document.createElement("td");
-                purchaseDate.appendChild(document.createTextNode(element.purchaseDate))
+                purchaseDate.appendChild(document.createTextNode(element.purchase_date.slice(0,10)))
                 let expirationDate = document.createElement("td");
-                expirationDate.appendChild(document.createTextNode(element.expirationDate))
+                expirationDate.appendChild(document.createTextNode(element.expiration_date.slice(0,10)))
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
                 // let link = document.createElement("a");
