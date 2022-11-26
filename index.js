@@ -71,9 +71,12 @@ router.post('/home/newitem', (req, res) => { //description, price, quantity, pur
   let body = JSON.parse(stringified);
   db.addItem(body.description,body.price,body.quantity,body.purchase_date, body.expiration_date, body.category, body.belongs_to);
   var todayDate = new Date().toISOString().slice(0, 10);
-  db.updateList(body.quantity, todayDate, body.belongs_to);
-  res.redirect('/home')
-  res.end();
+  db.getTotalItems(body.belongs_to).then(curCount => {
+    let updatedCount = parseInt(curCount)+parseInt(body.quantity);
+    db.updateList(updatedCount, todayDate, body.belongs_to);
+    res.redirect('/home')
+    res.end();
+  })
 })
 
 router.get('/list/:listID', (req, res) => {
@@ -153,4 +156,3 @@ router.post('/signup', (req, res) => {
   res.redirect('/')
   res.end();
 })
-

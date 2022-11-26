@@ -179,6 +179,18 @@ addList: function (listName, totalItems, lastUpdate, belongsTo){
     console.log("List added with user id", belongsTo);
 },
 
+getTotalItems: function(listID){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT total_items FROM Grocery_List WHERE list_id = ${listID};`;
+
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            resolve(result[0].total_items);      
+    })
+    })
+},
+
 updateList: function (totalItems, lastUpdate, list_id){
     let queryString = `UPDATE Grocery_List SET total_items=${totalItems}, last_update="${lastUpdate}" WHERE list_id=${list_id};`;
 
