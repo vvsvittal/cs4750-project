@@ -11,8 +11,8 @@
         <!-- Items -->
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/logout">Logout</span></a>
-            <a class="nav-item nav-link" href="/favorites">Favorites</a>
+            <a class="nav-item nav-link" href="/test">Logout</span></a>
+            <a class="nav-item nav-link" href="/lists">Lists</a>
             <a class="nav-item nav-link" href="/home">Home</a>
             <a class="nav-item nav-link" href="/about" >About</a>
           </div>
@@ -29,9 +29,28 @@
     
   </head>
   <body>
-    <h3 style="display:inline;"> List-Name </h3>
-    <a href="/lists" target="_parent"><button><i class="fa fa-plus"></i></button> <button><i class="fa fa-trash"></i></button> <button><i class="fa fa-plus"></i></button></a>
-    <!-- <button class="btn"></button> -->
+    <!-- description, price, quantity, purchaseDate, expirationDate, category,  belongsTo -->
+    <form action = /home/newitem method = post>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description"><br>
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price"><br>
+        <label for="quantity">Quantity:</label><br>
+        <input type="number" id="quantity" name="quantity"><br>
+        <label for="purchase_date">Purchase Date:</label><br>
+        <input type="date" id="purchase_date" name="purchase_date"><br>
+        <label for="expiration_date">Expiration Date:</label><br>
+        <input type="date" id="expiration_date" name="expiration_date"><br>
+        <label for="category">Category:</label><br>
+        <input type="text" id="category" name="category"><br>
+        <input type="hidden" id="belongs_to" name="belongs_to">
+        <input type="submit" value="Submit" />
+    </form>
+
+    <script type="text/javascript">
+        var listID = window.location.href.substring(35);
+        document.getElementById("belongs_to").value=(listID);
+   </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -40,3 +59,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </body>
 </html>
+
+
+

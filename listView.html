@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/home">Grocery List</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/logout">Logout</span></a>
+            <a class="nav-item nav-link" href="/favorites">Favorites</a>
+            <a class="nav-item nav-link" href="/home">Home</a>
+            <a class="nav-item nav-link" href="/about" >About</a>
+          </div>
+        </div> 
+      </nav>  
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    
+  </head>
+  <body onload="getMyItems()">
+    <h3 style="display:inline;"> My Items </h3>
+    <a onclick=func() target="_parent"><button><i class="-js-referral-link"></i></button></a>
+    <!-- <button class="btn"></button> -->
+    <div id="itemTableDiv">
+    
+    <table id = "itemTable" style="display:none">
+      <tr>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Purchase Date</th>
+        <th>Expiration Date</th>
+        <th>Category</th>
+      </tr>
+    </table>
+    </div>
+    <!-- <button class="btn"></button> -->
+
+    <script>
+
+function func(){	
+	var listIDValue = window.location.href.substring(27);
+	window.location.href = "http://localhost:3000/home/newitem/" + listIDValue;
+}
+
+      async function getMyItems(){
+        let myLists = await fetch('/getMyItems/' + window.location.href.substring(27)).then(res => {
+          res.json().then(data => {
+            console.log(data);
+            if(data == null){ //No items were found
+              let tableDiv = document.getElementById("itemTableDiv");
+              let dispMessage = document.createElement("p")
+              dispMessage.innerHTML = "Create an item to get started!";
+              tableDiv.appendChild(dispMessage);
+            }
+            else{ //If items were found for the current list
+              let table = document.getElementById("itemTable"); //description, price, quantity, purchaseDate, expirationDate, category
+              table.style.display = "";
+              data.forEach(element => {
+                let newRow = document.createElement("tr");
+                let description = document.createElement("td");
+                description.appendChild(document.createTextNode(element.description))
+                let price = document.createElement("td");
+                price.appendChild(document.createTextNode(element.price))
+                let quantity = document.createElement("td");
+                quantity.appendChild(document.createTextNode(element.quantity))
+                let purchaseDate = document.createElement("td");
+                purchaseDate.appendChild(document.createTextNode(element.purchaseDate))
+                let expirationDate = document.createElement("td");
+                expirationDate.appendChild(document.createTextNode(element.expirationDate))
+                let category = document.createElement("td");
+                category.appendChild(document.createTextNode(element.category))
+                // let link = document.createElement("a");
+                // link.href = "/list/"+element.list_id;
+                // link.append(document.createTextNode(element.list_name));
+                // name.appendChild(link)
+                // let totItems = document.createElement("td");
+                // totItems.appendChild(document.createTextNode(element.total_items))
+                // let lastUpdate = document.createElement("td");
+                // lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
+                newRow.appendChild(description);
+                newRow.appendChild(price);
+                newRow.appendChild(quantity);
+                newRow.appendChild(purchaseDate);
+                newRow.appendChild(expirationDate);
+                newRow.appendChild(category);
+                table.append(newRow);
+              });
+            } 
+          })
+        });
+    }
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

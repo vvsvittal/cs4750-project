@@ -101,6 +101,22 @@ getPwdByEmail: function(emailAddr){
     });
 },
 
+getIdByEmail: function(emailAddr){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT user_id FROM User WHERE email = "${emailAddr}";`
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(null);
+            if(result.length != 0) {
+                console.log(result[0].user_id)
+                resolve(result[0].user_id);
+            }
+            else
+                resolve(null)
+        })
+    });
+},
+
 viewUsers: function (){
     let queryString = `SELECT * FROM User;`;
 
@@ -153,17 +169,36 @@ viewStores: function (){
     })
 },
 
-addList: function (listID, listName, totalItems, lastUpdate, belongsTo){
-    let queryString = `INSERT INTO Grocery_List VALUES(${listID}, ${listName}, ${totalItems}, ${lastUpdate}, ${belongsTo});`;
+addList: function (listName, totalItems, lastUpdate, belongsTo){
+    let queryString = `INSERT INTO Grocery_List(list_name, total_items, last_update, belongs_to) VALUES("${listName}", ${totalItems}, "${lastUpdate}", ${belongsTo});`;
 
     sql.query(queryString, function(error, result){
         if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
+            throw error;      
     })
+    console.log("List added with user id", belongsTo);
+},
+
+getTotalItems: function(listID){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT total_items FROM Grocery_List WHERE list_id = ${listID};`;
+
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            resolve(result[0].total_items);      
+    })
+    })
+},
+
+updateList: function (totalItems, lastUpdate, list_id){
+    let queryString = `UPDATE Grocery_List SET total_items=${totalItems}, last_update="${lastUpdate}" WHERE list_id=${list_id};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("List updated with list id", list_id);
 },
 
 deleteList: function (listID){
@@ -179,29 +214,29 @@ deleteList: function (listID){
     })
 },
 
-viewLists: function (){
-    let queryString = `SELECT * FROM Grocery_List;`;
+viewListsByUser: function (userid){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM Grocery_List WHERE belongs_to =${userid};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
     })
 },
 
-addItem: function (itemID, description, price, quantity, purchaseDate, expirationDate, category,  belongsTo){
-    let queryString = `INSERT INTO Item VALUES(${itemID}, ${description}, ${price}, ${quantity}, ${purchaseDate}, ${expirationDate}, ${category}, ${belongsTo});`;
+addItem: function (description, price, quantity, purchaseDate, expirationDate, category,  belongsTo){
+    let queryString = `INSERT INTO Item(description, price, quantity, purchase_date, expiration_date, category, belongs_to) VALUES("${description}", ${price}, ${quantity}, "${purchaseDate}", "${expirationDate}", "${category}", ${belongsTo});`;
 
     sql.query(queryString, function(error, result){
         if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
+            throw error;    
+    console.log("Item added with list id", belongsTo);
     })
 },
 
@@ -218,30 +253,39 @@ deleteItem: function (itemID){
     })
 },
 
-viewItems: function (){
-    let queryString = `SELECT * FROM Item;`;
+viewItems: function (listID){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM Item WHERE belongs_to=${listID};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
     })
 },
 
 viewFavorites: function (userID){
-    let queryString = `SELECT * FROM Favorites WHERE user_id=${userID};`;
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM Favorites WHERE user_id=${userID};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
+
+
     })
+    
 },
 
 viewBuys: function (userID){
@@ -270,15 +314,18 @@ viewCreates: function (userID){
     })
 },
 
-viewBelongsTo: function (listID){
-    let queryString = `SELECT * FROM Belongs_To WHERE list_id=${listID};`;
+viewBelongsTo: function (listID) {
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT item_id FROM Belongs_To WHERE list_id=${listID};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
     })
 },

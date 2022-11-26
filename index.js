@@ -1,4 +1,5 @@
 
+
 const db = require('./static/database.js')
 
 const path = require('path')
@@ -30,8 +31,6 @@ app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
 
-
-
 //URL ROUTES
 
 router.get('/', (req,res) => {
@@ -53,26 +52,57 @@ router.get('/home/newlist', (req, res) => {
   res.sendFile(__dirname+"/new_list.html")
 })
 
-router.get('/lists', (req, res) => {
-  res.sendFile(__dirname+"/lists.html")
+router.post('/home/newlist', (req, res) => {
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  console.log(req.session.username)
+  db.addList(body.list_name,parseInt(0),todayDate,parseInt(req.session.userid));
+  res.redirect('/home')
+  res.end();
+})
+
+router.get('/home/newitem/:listID', (req, res) => {
+  res.sendFile(__dirname+"/new_item.html")
+})
+
+router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
+  db.addItem(body.description,body.price,body.quantity,body.purchase_date, body.expiration_date, body.category, body.belongs_to);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  db.getTotalItems(body.belongs_to).then(curCount => {
+    let updatedCount = parseInt(curCount)+parseInt(body.quantity);
+    db.updateList(updatedCount, todayDate, body.belongs_to);
+    res.redirect('/home')
+    res.end();
+  })
+})
+
+router.get('/list/:listID', (req, res) => {
+  // res.send("List ID is " + req.params.listID);
+  res.sendFile(__dirname+"/listView.html")
 })
 
 router.post('/login/validate', (req,res) => {
   let str = JSON.stringify(req.body);
   let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
+  db.getIdByEmail(user).then(val => {
     db.getPwdByEmail(user).then(out => {
-        hasher.compare(pw, out).then(isValid => {
-          if (isValid){
-            req.session.loggedin = true;
-            req.session.username = user;
-            res.redirect('/home')
-            return
-          }
-          else
-            res.send("Incorrect Username/Password");
-            return
-        })
-    })
+      hasher.compare(pw, out).then(isValid => {
+        if (isValid){
+          req.session.loggedin = true;
+          req.session.username = user;
+          req.session.userid = val;
+          res.redirect('/home')
+          return
+        }
+        else
+          res.send("Incorrect Username/Password");
+      })
+  })
+  }) 
+
 });
 router.get('/favorites', (req, res) => {
   res.sendFile(__dirname+"/favorites.html")
@@ -82,6 +112,25 @@ router.get('/about', (req, res) => {
   res.sendFile(__dirname+"/about.html")
 })
 
+router.get('/getFavorites', (req,res) => {
+  db.viewFavorites(320).then(favs => {
+    console.log(favs);
+    res.send(JSON.stringify(favs));
+  })
+})
+
+router.get('/getMyLists', (req, res) => {
+  db.viewListsByUser(req.session.userid).then(lists => {
+    res.send(JSON.stringify(lists))
+  })
+})
+
+router.get('/getMyItems/:listID', (req, res) => {
+  console.log(req.params.listID);
+  db.viewItems(req.params.listID).then(items => {
+    res.send(JSON.stringify(items))
+  })
+})
 
 router.get('/logout', (req,res) => {
   if(req.session.loggedin){
@@ -104,6 +153,6 @@ router.post('/signup', (req, res) => {
       db.addUser(nameID, addrID, body.phoneNum, body.email, body.birthday, body.pwd);
     })
   })
+  res.redirect('/')
   res.end();
 })
-
