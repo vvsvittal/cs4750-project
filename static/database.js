@@ -130,18 +130,40 @@ viewUsers: function (){
     })
 },
 
-addStore: function (storeID, name, addressID){
-    let queryString = `INSERT INTO Store VALUES(${storeID}, ${name}, ${addressID});`;
+addStore: function (name, addressID){
+    let queryString = `INSERT INTO Store(name, address_id) VALUES("${name}", ${addressID});`;
 
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
+    console.log(name + " added");
     })
 },
+
+getStoreID: function(storename, addyId){
+   return new Promise((resolve, reject) => {
+        let queryString = `SELECT store_id FROM Store WHERE name="${storename}" AND address_id=${addyId};`
+        sql.query(queryString, function (error, result){
+            if (error)
+                return reject(error);
+            resolve(JSON.stringify(result[0].store_id))
+        });
+    });
+},
+
+
+getItemId: function(desc, belongs){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT item_id FROM Item WHERE description="${desc}" AND belongs_to=${belongs};`
+        sql.query(queryString, function (error, result){
+            if (error)
+                return reject(error);
+            resolve(JSON.stringify(result[0].item_id))
+        });
+    });
+},
+
+
 
 deleteStore: function (storeID){
     let queryString = `DELETE FROM Store WHERE store_id=(${storeID});`;
@@ -167,6 +189,16 @@ viewStores: function (){
             console.log(r);
         })
     })
+},
+
+addSoldBy: function(storeID, itemid){
+    let queryString = `INSERT INTO Sold_By(store_id, item_id) VALUES (${storeID}, ${itemid});`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("item "+itemid+ " associated with store "+ storeID);
 },
 
 addList: function (listName, totalItems, lastUpdate, belongsTo){

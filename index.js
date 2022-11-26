@@ -74,9 +74,19 @@ router.post('/home/newitem', (req, res) => { //description, price, quantity, pur
   db.getTotalItems(body.belongs_to).then(curCount => {
     let updatedCount = parseInt(curCount)+parseInt(body.quantity);
     db.updateList(updatedCount, todayDate, body.belongs_to);
+    db.addAddress(body.street_number, body.street, body.city, body.state, body.zip, body.unit);
+    db.getAddressID(body.street_number, body.street, body.city, body.state, body.zip, body.unit).then(addyId => {
+      db.addStore(body.store_name, addyId);
+      db.getStoreID(body.store_name, addyId).then(storeID => {
+        db.getItemId(body.description, body.belongs_to).then(itemid => {
+           db.addSoldBy(storeID, itemid)
+        })
+      })
+    })
     res.redirect('/home')
     res.end();
   })
+
 })
 
 router.get('/list/:listID', (req, res) => {
