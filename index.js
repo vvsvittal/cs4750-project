@@ -31,8 +31,6 @@ app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
 
-
-
 //URL ROUTES
 
 router.get('/', (req,res) => {
@@ -64,9 +62,23 @@ router.post('/home/newlist', (req, res) => {
   res.end();
 })
 
+router.get('/home/newitem/:listID', (req, res) => {
+  res.sendFile(__dirname+"/new_item.html")
+})
+
+router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
+  db.addItem(body.description,body.price,body.quantity,body.purchase_date, body.expiration_date, body.category, body.belongs_to);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  db.updateList(body.quantity, todayDate, body.belongs_to);
+  res.redirect('/home')
+  res.end();
+})
+
 router.get('/list/:listID', (req, res) => {
-  res.send("List ID is " + req.params.listID);
-  //res.sendFile(__dirname+"/listView.html")
+  // res.send("List ID is " + req.params.listID);
+  res.sendFile(__dirname+"/listView.html")
 })
 
 router.post('/login/validate', (req,res) => {
@@ -107,6 +119,13 @@ router.get('/getFavorites', (req,res) => {
 router.get('/getMyLists', (req, res) => {
   db.viewListsByUser(req.session.userid).then(lists => {
     res.send(JSON.stringify(lists))
+  })
+})
+
+router.get('/getMyItems/:listID', (req, res) => {
+  console.log(req.params.listID);
+  db.viewItems(req.params.listID).then(items => {
+    res.send(JSON.stringify(items))
   })
 })
 

@@ -31,6 +31,7 @@
   <h2 style="text-align:center"> Welcome Back!</h2>
   <body onload="getMyLists()">
     <h3 style="display:inline;"> My Lists </h3>
+    <!-- <h3 style="display:inline;"> {window.location.href} </h3> -->
     <a href="/home/newlist" target="_parent"><button><i class="fa fa-plus"></i></button></a>
     <!-- <button class="btn"></button> -->
     <div id="listTableDiv">
@@ -69,6 +70,7 @@
                 link.href = "/list/"+element.list_id;
                 link.append(document.createTextNode(element.list_name));
                 name.appendChild(link)
+                console.log(window.location.href.substring(27));
                 let totItems = document.createElement("td");
                 totItems.appendChild(document.createTextNode(element.total_items))
                 let lastUpdate = document.createElement("td");

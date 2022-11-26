@@ -179,6 +179,16 @@ addList: function (listName, totalItems, lastUpdate, belongsTo){
     console.log("List added with user id", belongsTo);
 },
 
+updateList: function (totalItems, lastUpdate, list_id){
+    let queryString = `UPDATE Grocery_List SET total_items=${totalItems}, last_update="${lastUpdate}" WHERE list_id=${list_id};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("List updated with list id", list_id);
+},
+
 deleteList: function (listID){
     let queryString = `DELETE FROM Grocery_List WHERE list_id=(${listID});`;
 
@@ -209,15 +219,12 @@ viewListsByUser: function (userid){
 },
 
 addItem: function (description, price, quantity, purchaseDate, expirationDate, category,  belongsTo){
-    let queryString = `INSERT INTO Item(description, price, quantity, purchase_date, expiration_date, category, belongs_to) VALUES(${description}, ${price}, ${quantity}, ${purchaseDate}, ${expirationDate}, ${category}, ${belongsTo});`;
+    let queryString = `INSERT INTO Item(description, price, quantity, purchase_date, expiration_date, category, belongs_to) VALUES("${description}", ${price}, ${quantity}, "${purchaseDate}", "${expirationDate}", "${category}", ${belongsTo});`;
 
     sql.query(queryString, function(error, result){
         if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
-        })
+            throw error;    
+    console.log("Item added with list id", belongsTo);
     })
 },
 
@@ -234,15 +241,18 @@ deleteItem: function (itemID){
     })
 },
 
-viewItems: function (){
-    let queryString = `SELECT * FROM Item;`;
+viewItems: function (listID){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * FROM Item WHERE belongs_to=${listID};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
     })
 },
@@ -292,15 +302,18 @@ viewCreates: function (userID){
     })
 },
 
-viewBelongsTo: function (listID){
-    let queryString = `SELECT * FROM Belongs_To WHERE list_id=${listID};`;
+viewBelongsTo: function (listID) {
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT item_id FROM Belongs_To WHERE list_id=${listID};`;
 
-    sql.query(queryString, function(error, result){
-        if (error)
-            throw error;
-        
-        result.forEach(r => {
-            console.log(r);
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error);
+            if(result.length == 0)
+                resolve(null)
+            else{
+                resolve(result);
+            }
         })
     })
 },
