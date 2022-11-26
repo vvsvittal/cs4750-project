@@ -1,5 +1,11 @@
 <!doctype html>
 <html lang="en">
+<script src=
+"//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js">
+</script>
+<script src=
+"//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">
+</script>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/home">Grocery List</a>
@@ -23,9 +29,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>	
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+
+
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> 
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  
     
   </head>
   <body onload="getMyItems()">
@@ -44,10 +58,74 @@
         <th>Category</th>
       </tr>
     </table>
+    <button type = "button" onclick="tableToCSV()">
+      CSV
+    </button>
     </div>
     <!-- <button class="btn"></button> -->
 
+
     <script>
+//Help with CSV download
+// https://www.geeksforgeeks.org/how-to-export-html-table-to-csv-using-javascript/
+function tableToCSV() {
+ 
+ // Variable to store the final csv data
+ var csv_data = [];
+
+ // Get each row data
+ var rows = document.getElementsByTagName('tr');
+ for (var i = 0; i < rows.length; i++) {
+
+     // Get each column data
+     var cols = rows[i].querySelectorAll('td,th');
+
+     // Stores each csv row data
+     var csvrow = [];
+     for (var j = 0; j < cols.length; j++) {
+
+         // Get the text data of each cell
+         // of a row and push it to csvrow
+         csvrow.push(cols[j].innerHTML);
+     }
+
+     // Combine each column value with comma
+     csv_data.push(csvrow.join(","));
+    }
+    // Combine each row data with new line character
+    csv_data = csv_data.join('\n');
+ 
+ // Call this function to download csv file 
+ downloadCSVFile(csv_data);
+
+}
+
+function downloadCSVFile(csv_data) {
+ 
+ // Create CSV file object and feed
+ // our csv_data into it
+ CSVFile = new Blob([csv_data], {
+     type: "text/csv"
+ });
+
+ // Create to temporary link to initiate
+ // download process
+ var temp_link = document.createElement('a');
+
+ // Download csv file
+ temp_link.download = "Item_List.csv";
+ var url = window.URL.createObjectURL(CSVFile);
+ temp_link.href = url;
+
+ // This link should not be displayed
+ temp_link.style.display = "none";
+ document.body.appendChild(temp_link);
+
+ // Automatically click the link to
+ // trigger download
+ temp_link.click();
+ document.body.removeChild(temp_link);
+}
 
 function func(){	
 	var listIDValue = window.location.href.substring(27);
@@ -101,6 +179,7 @@ function func(){
           })
         });
     }
+
     </script>
 
     <!-- Optional JavaScript -->
