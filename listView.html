@@ -30,11 +30,12 @@
   </head>
   <body onload="getMyItems()">
     <h3 style="display:inline;"> My Items </h3>
-    <a onclick=func() target="_parent"><button><i class="-js-referral-link"></i></button></a>
+    <a onclick=func() target="_parent"><button><i class="fa fa-plus"></i></button></a>
     <!-- <button class="btn"></button> -->
     <div id="itemTableDiv">
     
-    <table id = "itemTable" style="display:none">
+    <table id = "itemTable" style="display:none" class="table table-bordered table-condensed table-striped">
+      <thead>
       <tr>
         <th>Description</th>
         <th>Price</th>
@@ -42,7 +43,10 @@
         <th>Purchase Date</th>
         <th>Expiration Date</th>
         <th>Category</th>
+        <!-- <th>Edit</th>
+        <th>Delete</th> -->
       </tr>
+      </thead>
     </table>
     </div>
     <!-- <button class="btn"></button> -->
@@ -81,20 +85,28 @@ function func(){
                 expirationDate.appendChild(document.createTextNode(element.expiration_date.slice(0,10)))
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
-                // let link = document.createElement("a");
-                // link.href = "/list/"+element.list_id;
-                // link.append(document.createTextNode(element.list_name));
-                // name.appendChild(link)
-                // let totItems = document.createElement("td");
-                // totItems.appendChild(document.createTextNode(element.total_items))
-                // let lastUpdate = document.createElement("td");
-                // lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
+                let edit = document.createElement("button")
+                edit.innerHTML = "Edit"
+                // edit.type = "submit"
+                // document.body.appendChild(edit);
+                let del = document.createElement("button")
+                del.innerHTML = "Delete"
+                del.onclick = function () {
+                  let delitem = fetch("/deleteItem/"+ element.description + '/' + window.location.href.substring(27)).then(resp => {
+                    console.log("successfully deleted");
+                  })
+                }
+                // del.type = "delete"
+                // document.body.appendChild(del);
+                // del.className = "delete";
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
                 newRow.appendChild(purchaseDate);
                 newRow.appendChild(expirationDate);
                 newRow.appendChild(category);
+                newRow.appendChild(edit);
+                newRow.appendChild(del);
                 table.append(newRow);
               });
             } 
