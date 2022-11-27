@@ -147,6 +147,14 @@ router.get('/getMyItems/:listID', (req, res) => {
   })
 })
 
+router.get('/deleteList/:listID', (req,res) => {
+  // let stringified = JSON.stringify(req.body);
+  // let body = JSON.parse(stringified);
+  // console.log(req.body)
+  db.deleteList(req.params.listID);
+  res.send("List successfully deleted");
+})
+
 router.get('/deleteItem/:itemID', (req,res) => {
   // let stringified = JSON.stringify(req.body);
   // let body = JSON.parse(stringified);
