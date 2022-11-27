@@ -41,7 +41,7 @@
         <th>List Name</th>
         <th>Total Items</th>
         <th>Last Update</th>
-        <!--<th>Delete?</th>-->
+        <th>Delete?</th>
       </tr>
     </table>
     </div>
@@ -80,16 +80,19 @@
                 let lastUpdate = document.createElement("td");
                 lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
 
-                //let deletebutton = document.createElement("td")
+                //let deletebutton = document.createElement("delete")
                 //let link2 = document.createElement("b");
                 //link2.href = "/list/"+element.list_id;
                 //link2.append(document.createTextNode("delete?"));
                 //deletebutton.appendChild(link2)
+                let del = document.createElement("button")
+                del.innerHTML = "Delete"
+                del.onclick = function() { deleteListener(element.list_id).then(location.reload())};
                 
                 newRow.appendChild(name);
                 newRow.appendChild(totItems);
                 newRow.appendChild(lastUpdate);
-                //newRow.appendChild(deletebutton)
+                newRow.appendChild(del)
                 table.append(newRow);
               });
             } 
@@ -99,7 +102,11 @@
 
     }
     
-    
+    async function deleteListener(listID) {
+      // console.log(itemID);
+        const delitem = await fetch("/deleteList/" + listID);
+          console.log(delitem.status);
+    }
     </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

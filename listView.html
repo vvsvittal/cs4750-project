@@ -31,8 +31,8 @@
   <body onload="getMyItems()">
     <h3 style="display:inline;"> My Items </h3>
     <a onclick=func() target="_parent"><button><i class="-js-referral-link">Add Item</i></button></a>
-    <a onclick=deleteList() target="_parent"><button><i class="-js-referral-link">Delete List</i></button></a>
-    <!-- <form action = "/list" method = post>
+    <!--<a onclick=deleteList() target="_parent"><button><i class="-js-referral-link">Delete List</i></button></a>
+     <form action = "/list" method = post>
         <input type="submit" value="Delete List" />
     </form> -->
     <!-- <button class="btn"></button> -->
@@ -46,6 +46,8 @@
         <th>Purchase Date</th>
         <th>Expiration Date</th>
         <th>Category</th>
+        <th>Edit</th>
+        <th>Delete</th>
       </tr>
     </table>
     </div>
@@ -58,7 +60,7 @@ function func(){
 	window.location.href = "http://localhost:3000/home/newitem/" + listIDValue;
 }
 
-      async function getMyItems(){
+async function getMyItems(){
         let myLists = await fetch('/getMyItems/' + window.location.href.substring(27)).then(res => {
           res.json().then(data => {
             console.log(data);
@@ -85,20 +87,24 @@ function func(){
                 expirationDate.appendChild(document.createTextNode(element.expiration_date.slice(0,10)))
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
-                // let link = document.createElement("a");
-                // link.href = "/list/"+element.list_id;
-                // link.append(document.createTextNode(element.list_name));
-                // name.appendChild(link)
-                // let totItems = document.createElement("td");
-                // totItems.appendChild(document.createTextNode(element.total_items))
-                // let lastUpdate = document.createElement("td");
-                // lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
+                let edit = document.createElement("button")
+                edit.innerHTML = "Edit"
+                // edit.type = "submit"
+                // document.body.appendChild(edit);
+                let del = document.createElement("button")
+                del.innerHTML = "Delete"
+                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
+                // del.type = "delete"
+                // document.body.appendChild(del);
+                // del.className = "delete";
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
                 newRow.appendChild(purchaseDate);
                 newRow.appendChild(expirationDate);
                 newRow.appendChild(category);
+                newRow.appendChild(edit);
+                newRow.appendChild(del);
                 table.append(newRow);
               });
             } 
@@ -106,10 +112,32 @@ function func(){
         });
     }
 
-    function deleteList(){
+    async function deleteList() {
       let thisURL = window.location.href
-      let thisListID = thisURL.slice(thisURL.length-4);
+      var listID = window.location.href.substring(27);
+      const dellist = await fetch("/deleteList/" + listID);
+      console.log(dellist.status);
       
+      /*fetch(thisURL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'X-CSRF-Token': csrfToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        thisListID
+      }),
+    })*/
+    //.then((response) => response.json())
+    //.then(response => console.log(JSON.stringify(response)))
+    }
+
+    async function deleteListener(itemID) {
+      // console.log(itemID);
+        const delitem = await fetch("/deleteItem/" + itemID);
+          console.log(delitem.status);
     }
     </script>
 
