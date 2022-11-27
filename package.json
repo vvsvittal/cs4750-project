@@ -21,6 +21,7 @@
     "bootstrap": "^5.2.3",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "html-table-to-json": "^1.0.0",
     "html-to-text": "^8.2.1",
     "jquery": "^3.6.1",
     "mysql": "^2.18.1",
