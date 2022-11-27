@@ -94,6 +94,14 @@ router.get('/list/:listID', (req, res) => {
   res.sendFile(__dirname+"/listView.html")
 })
 
+router.post('/list', (req, res) => {
+  // res.send("List ID is " + req.params.listID);
+  //res.sendFile(__dirname+"/listView.html")
+  db.deleteList(req.params.listID)
+  res.redirect('/home')
+  res.end();
+})
+
 router.post('/login/validate', (req,res) => {
   let str = JSON.stringify(req.body);
   let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
