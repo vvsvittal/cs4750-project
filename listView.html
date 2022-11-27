@@ -91,11 +91,7 @@ function func(){
                 // document.body.appendChild(edit);
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
-                del.onclick = function () {
-                  let delitem = fetch("/deleteItem/"+ element.description + '/' + window.location.href.substring(27)).then(resp => {
-                    console.log("successfully deleted");
-                  })
-                }
+                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
                 // del.type = "delete"
                 // document.body.appendChild(del);
                 // del.className = "delete";
@@ -112,6 +108,12 @@ function func(){
             } 
           })
         });
+    }
+
+    async function deleteListener(itemID) {
+      // console.log(itemID);
+        const delitem = await fetch("/deleteItem/" + itemID);
+          console.log(delitem.status);
     }
     </script>
 

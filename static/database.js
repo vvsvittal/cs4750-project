@@ -272,8 +272,8 @@ addItem: function (description, price, quantity, purchaseDate, expirationDate, c
     })
 },
 
-deleteItem: function (desc, listID){
-    let queryString = `DELETE FROM Item WHERE description=${desc} AND list_id=${listID};`;
+deleteItem: function (itemID){
+    let queryString = `DELETE FROM Item WHERE item_id=${itemID};`;
 
     sql.query(queryString, function(error, result){
         if (error)
