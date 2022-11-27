@@ -61,11 +61,55 @@
     <button type = "button" onclick="tableToCSV()">
       CSV
     </button>
+    <button type="button" id="bt" onclick="showTableData()">
+    TXT
+    </button>
+    <p hidden id="info"></p>
     </div>
     <!-- <button class="btn"></button> -->
 
 
     <script>
+
+
+function showTableData(){
+  document.getElementById('info').innerHTML = "";
+        var myTab = document.getElementById('itemTable');
+
+        // LOOP THROUGH EACH ROW OF THE TABLE AFTER HEADER.
+        for (i = 0; i < myTab.rows.length; i++) {
+
+            // GET THE CELLS COLLECTION OF THE CURRENT ROW.
+            var objCells = myTab.rows.item(i).cells;
+
+            // LOOP THROUGH EACH CELL OF THE CURENT ROW TO READ CELL VALUES.
+            for (var j = 0; j < objCells.length; j++) {
+                info.innerHTML = info.innerHTML + ' ' + objCells.item(j).innerHTML;
+            }
+            info.innerHTML = info.innerHTML + "|";     // ADD A BREAK (TAG).
+        }
+    var values =  document.getElementById('info').innerHTML
+    TXTFile = new Blob([values], {
+     type: "text/plain"
+ });
+
+ var temp_link = document.createElement('a');
+
+ // Download txt file
+ temp_link.download = "Item_List.txt";
+ var url = window.URL.createObjectURL(TXTFile);
+ temp_link.href = url;
+
+ // This link should not be displayed
+ temp_link.style.display = "none";
+ document.body.appendChild(temp_link);
+
+ // Automatically click the link to
+ // trigger download
+ temp_link.click();
+ document.body.removeChild(temp_link);
+}
+
 //Help with CSV download
 // https://www.geeksforgeeks.org/how-to-export-html-table-to-csv-using-javascript/
 function tableToCSV() {
@@ -101,7 +145,6 @@ function tableToCSV() {
 }
 
 function downloadCSVFile(csv_data) {
- 
  // Create CSV file object and feed
  // our csv_data into it
  CSVFile = new Blob([csv_data], {
@@ -126,6 +169,9 @@ function downloadCSVFile(csv_data) {
  temp_link.click();
  document.body.removeChild(temp_link);
 }
+
+
+// JSON.stringify(tableToJson($0));
 
 function func(){	
 	var listIDValue = window.location.href.substring(27);
