@@ -94,11 +94,12 @@ router.get('/list/:listID', (req, res) => {
   res.sendFile(__dirname+"/listView.html")
 })
 
-router.post('/list', (req, res) => {
+router.post('/deleteList', (req, res) => {
   // res.send("List ID is " + req.params.listID);
   //res.sendFile(__dirname+"/listView.html")
-  db.deleteList(req.params.listID)
-  res.redirect('/home')
+  console.log("here ", req.body);
+  //db.deleteList()
+  //res.redirect('/home')
   res.end();
 })
 
