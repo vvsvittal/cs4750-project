@@ -246,13 +246,6 @@ function func(){
                 expirationDate.appendChild(document.createTextNode(element.expiration_date.slice(0,10)))
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
-                let edit = document.createElement("button")
-                edit.innerHTML = "Edit"
-                edit.onclick = function() { editListener(element.item_id).then(window.location.href = "http://localhost:3000/home/update/" + element.item_id)}
-                let del = document.createElement("button")
-                del.innerHTML = "Delete"
-                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
-
                 // let link = document.createElement("a");
                 // link.href = "/list/"+element.list_id;
                 // link.append(document.createTextNode(element.list_name));
@@ -261,7 +254,6 @@ function func(){
                 // totItems.appendChild(document.createTextNode(element.total_items))
                 // let lastUpdate = document.createElement("td");
                 // lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
-
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
@@ -273,19 +265,6 @@ function func(){
             } 
           })
         });
-    }
-
-
-    async function editListener(itemID) {
-      // console.log(itemID);
-        const delitem = await fetch("/updateItem/" + itemID);
-          console.log(delitem.status);
-    }
-
-    async function deleteListener(itemID) {
-      // console.log(itemID);
-        const delitem = await fetch("/deleteItem/" + itemID);
-          console.log(delitem.status);
     }
 
     </script>
