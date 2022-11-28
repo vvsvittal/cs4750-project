@@ -87,14 +87,10 @@ function func(){
                 category.appendChild(document.createTextNode(element.category))
                 let edit = document.createElement("button")
                 edit.innerHTML = "Edit"
-                // edit.type = "submit"
-                // document.body.appendChild(edit);
+                edit.onclick = function() { editListener(element.item_id).then(window.location.href = "http://localhost:3000/home/update/" + element.item_id)}
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
-                // del.type = "delete"
-                // document.body.appendChild(del);
-                // del.className = "delete";
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
@@ -108,6 +104,12 @@ function func(){
             } 
           })
         });
+    }
+
+    async function editListener(itemID) {
+      // console.log(itemID);
+        const delitem = await fetch("/updateItem/" + itemID);
+          console.log(delitem.status);
     }
 
     async function deleteListener(itemID) {
