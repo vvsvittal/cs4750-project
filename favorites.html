@@ -29,8 +29,22 @@
   </head>
   <body onload="getFavorites()">
     <h3 style="display:inline;"> Favorites! </h3>
-    <!--<a href="/lists" target="_parent"><button><i class="fa fa-minus"></i></a>
-    <div id = "favoritesList"></div> -->
+    <!--<a href="/lists" target="_parent"><button><i class="fa fa-minus"></i></a> -->
+    <div id = "favoritesList"></div> 
+
+    <table id = "itemTable" style="display:none" class="table table-bordered table-condensed table-striped">
+      <tr>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Purchase Date</th>
+        <th>Expiration Date</th>
+        <th>Category</th>
+      </tr>
+    </table>
+    <br>
+
+
 
     <script>
       async function getFavorites(){
@@ -39,8 +53,31 @@
             console.log(data[0])
             console.log(data[0].user_id)
             console.log(data[0].item_id)
+            console.log(data[1])
             console.log(data[1].user_id)
             console.log(data[1].item_id)
+
+            if(data == null){ //No items were found
+              let tableDiv = document.getElementById("itemTableDiv");
+              let dispMessage = document.createElement("p")
+              dispMessage.innerHTML = "Create an item to get started!";
+              tableDiv.appendChild(dispMessage);
+            }
+            else{ //If items were found for the current list
+              let table = document.getElementById("itemTable"); //description, price, quantity, purchaseDate, expirationDate, category
+              table.style.display = "";
+              data.forEach(element => {
+                let newRow = document.createElement("tr"); //create new row in table
+                let uid = document.createElement("td");
+                uid.appendChild(document.createTextNode(element.user_id))
+                let iid = document.createElement("td");
+                iid.appendChild(document.createTextNode(element.item_id))
+
+                newRow.appendChild(uid);
+                newRow.appendChild(iid);
+                table.append(newRow);
+              });
+            }
           })
         })
       }
