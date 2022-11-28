@@ -1,5 +1,11 @@
 <!doctype html>
 <html lang="en">
+<script src=
+"//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js">
+</script>
+<script src=
+"//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">
+</script>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/home">Grocery List</a>
@@ -23,19 +29,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>	
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+
+
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script> 
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  
     
   </head>
   <body onload="getMyItems()">
     <h3 style="display:inline;"> My Items </h3>
-    <a onclick=func() target="_parent"><button><i class="fa fa-plus"></i></button></a>
+    <a onclick=func() target="_parent"><button><i class="-js-referral-link"></i></button></a>
     <!-- <button class="btn"></button> -->
     <div id="itemTableDiv">
     
-    <table id = "itemTable" style="display:none" class="table table-bordered table-condensed table-striped">
-      <thead>
+    <table id = "itemTable" style="display:none">
       <tr>
         <th>Description</th>
         <th>Price</th>
@@ -43,15 +56,163 @@
         <th>Purchase Date</th>
         <th>Expiration Date</th>
         <th>Category</th>
-        <!-- <th>Edit</th>
-        <th>Delete</th> -->
       </tr>
-      </thead>
     </table>
-    </div>
-    <!-- <button class="btn"></button> -->
+    <br>
 
+    <button type = "button" class="btn btn-primary" onclick="tableToCSV()">
+      CSV
+    </button>
+    <button type="button" class="btn btn-primary" id="bt" onclick="showTableData()">
+    TXT
+    </button>
+    <button type="button" class="btn btn-primary" id="bt" onclick="JsonDownload()">
+      JSON
+      </button>
+      <!-- Keep this line! -->
+    <p hidden id="info"></p>
+    </div>
     <script>
+// https://gist.github.com/johannesjo/6b11ef072a0cb467cc93a885b5a1c19f - formatting
+function JsonDownload(){
+  var table = document.getElementById('itemTable');
+    var data = [];
+
+// first row needs to be headers
+  var headers = [];
+  for (var i=0; i<table.rows[0].cells.length; i++) {
+      headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
+  }
+
+  // go through cells
+  for (var i=1; i<table.rows.length; i++) {
+
+      var tableRow = table.rows[i];
+      var rowData = {};
+
+      for (var j=0; j<tableRow.cells.length; j++) {
+
+          rowData[ headers[j] ] = tableRow.cells[j].innerHTML;
+
+      }
+
+      data.push(rowData);
+  }       
+
+    JSONFile = new Blob([JSON.stringify(data)], {
+      type: "application/json"
+  });
+
+  var temp_link = document.createElement('a');
+
+  // Download JSON file
+  temp_link.download = "Item_List.json";
+  var url = window.URL.createObjectURL(JSONFile);
+  temp_link.href = url;
+
+  temp_link.style.display = "none";
+  document.body.appendChild(temp_link);
+  temp_link.click();
+  document.body.removeChild(temp_link);
+  }
+
+
+function showTableData(){
+  document.getElementById('info').innerHTML = "";
+        var myTab = document.getElementById('itemTable');
+
+        // LOOP THROUGH EACH ROW OF THE TABLE AFTER HEADER.
+        for (i = 0; i < myTab.rows.length; i++) {
+
+            // GET THE CELLS COLLECTION OF THE CURRENT ROW.
+            var objCells = myTab.rows.item(i).cells;
+
+            // LOOP THROUGH EACH CELL OF THE CURENT ROW TO READ CELL VALUES.
+            for (var j = 0; j < objCells.length; j++) {
+                info.innerHTML = info.innerHTML + ' ' + objCells.item(j).innerHTML;
+            }
+            info.innerHTML = info.innerHTML + "|";     // ADD A BREAK (TAG).
+        }
+    var values =  document.getElementById('info').innerHTML
+    TXTFile = new Blob([values], {
+     type: "text/plain"
+ });
+
+ var temp_link = document.createElement('a');
+
+ // Download txt file
+ temp_link.download = "Item_List.txt";
+ var url = window.URL.createObjectURL(TXTFile);
+ temp_link.href = url;
+
+ temp_link.style.display = "none";
+ document.body.appendChild(temp_link);
+ temp_link.click();
+ document.body.removeChild(temp_link);
+}
+
+//Help with CSV download
+// https://www.geeksforgeeks.org/how-to-export-html-table-to-csv-using-javascript/
+function tableToCSV() {
+ 
+ // Variable to store the final csv data
+ var csv_data = [];
+
+ // Get each row data
+ var rows = document.getElementsByTagName('tr');
+ for (var i = 0; i < rows.length; i++) {
+
+     // Get each column data
+     var cols = rows[i].querySelectorAll('td,th');
+
+     // Stores each csv row data
+     var csvrow = [];
+     for (var j = 0; j < cols.length; j++) {
+
+         // Get the text data of each cell
+         // of a row and push it to csvrow
+         csvrow.push(cols[j].innerHTML);
+     }
+
+     // Combine each column value with comma
+     csv_data.push(csvrow.join(","));
+    }
+    // Combine each row data with new line character
+    csv_data = csv_data.join('\n');
+ 
+ // Call this function to download csv file 
+ downloadCSVFile(csv_data);
+
+}
+
+function downloadCSVFile(csv_data) {
+ // Create CSV file object and feed
+ // our csv_data into it
+ CSVFile = new Blob([csv_data], {
+     type: "text/csv"
+ });
+
+ // Create to temporary link to initiate
+ // download process
+ var temp_link = document.createElement('a');
+
+ // Download csv file
+ temp_link.download = "Item_List.csv";
+ var url = window.URL.createObjectURL(CSVFile);
+ temp_link.href = url;
+
+ // This link should not be displayed
+ temp_link.style.display = "none";
+ document.body.appendChild(temp_link);
+
+ // Automatically click the link to
+ // trigger download
+ temp_link.click();
+ document.body.removeChild(temp_link);
+}
+
+
+// JSON.stringify(tableToJson($0));
 
 function func(){	
 	var listIDValue = window.location.href.substring(27);
@@ -91,20 +252,29 @@ function func(){
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
+
+                // let link = document.createElement("a");
+                // link.href = "/list/"+element.list_id;
+                // link.append(document.createTextNode(element.list_name));
+                // name.appendChild(link)
+                // let totItems = document.createElement("td");
+                // totItems.appendChild(document.createTextNode(element.total_items))
+                // let lastUpdate = document.createElement("td");
+                // lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
+
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
                 newRow.appendChild(purchaseDate);
                 newRow.appendChild(expirationDate);
                 newRow.appendChild(category);
-                newRow.appendChild(edit);
-                newRow.appendChild(del);
                 table.append(newRow);
               });
             } 
           })
         });
     }
+
 
     async function editListener(itemID) {
       // console.log(itemID);
@@ -117,6 +287,7 @@ function func(){
         const delitem = await fetch("/deleteItem/" + itemID);
           console.log(delitem.status);
     }
+
     </script>
 
     <!-- Optional JavaScript -->

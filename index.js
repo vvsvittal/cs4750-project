@@ -58,13 +58,17 @@ router.post('/home/newlist', (req, res) => {
   var todayDate = new Date().toISOString().slice(0, 10);
   console.log(req.session.username)
   db.addList(body.list_name,parseInt(0),todayDate,parseInt(req.session.userid));
-  res.redirect('/home')
-  res.end();
+  db.getListId(body.list_name, parseInt(req.session.userid)).then(listid => {
+    db.addCreates(parseInt(req.session.userid), listid)
+    res.redirect('/home')
+    res.end();
+  })
 })
 
 router.get('/home/newitem/:listID', (req, res) => {
   res.sendFile(__dirname+"/new_item.html")
 })
+
 
 router.post('/home/updateitem/:itemID', (req, res) => {
   
@@ -73,6 +77,9 @@ router.post('/home/updateitem/:itemID', (req, res) => {
 router.get('/home/updateitem/:itemID', (req, res) => {
   res.sendFile(__dirname+"/new_item.html")
 })
+
+router.get('/home/')
+
 
 router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
   let stringified = JSON.stringify(req.body);
@@ -117,11 +124,6 @@ router.get('/list/:listID', (req, res) => {
   // res.send("List ID is " + req.params.listID);
   res.sendFile(__dirname+"/listView.html")
 })
-
-router.get('/item/:itemID', (req, res) => {
-  // res.send("Item ID is " + req.params.listID);
-  res.sendFile(__dirname+"/itemView.html")
-}) 
 
 router.post('/login/validate', (req,res) => {
   let str = JSON.stringify(req.body);

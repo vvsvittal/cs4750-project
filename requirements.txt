@@ -10,3 +10,4 @@ mysql
 passport
 passport-local
 bcrypt
+html-to-text
