@@ -250,6 +250,16 @@ deleteSoldBy: function(itemid){
     console.log("item "+itemid+ " deleted from SoldBy ");
 },
 
+deleteCreates: function(listid){
+    let queryString = `DELETE FROM Creates WHERE list_id=${listid};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("list "+listid+ " deleted from Creates ");
+},
+
 addList: function (listName, totalItems, lastUpdate, belongsTo){
     let queryString = `INSERT INTO Grocery_List(list_name, total_items, last_update, belongs_to) VALUES("${listName}", ${totalItems}, "${lastUpdate}", ${belongsTo});`;
 
@@ -289,9 +299,7 @@ deleteList: function (listID){
         if (error)
             throw error;
         
-        result.forEach(r => {
-            console.log(r);
-        })
+        
     })
 },
 
@@ -345,6 +353,17 @@ viewItems: function (listID){
             }
         })
     })
+},
+
+addFavorites: function(userID, itemid){
+    let queryString = `INSERT INTO Favorites(user_id, item_id) VALUES(${userID}, ${itemid});`
+    //`INSERT INTO Favorites (user_id, item_id)
+      //  SELECT (description, price, quantity, purchase_date, expiration_date, category, belongs_to) FROM Item WHERE Item.item_id=${itemID};`
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+    console.log("item "+itemid+ " added to favorites ");
 },
 
 viewFavorites: function (userID){

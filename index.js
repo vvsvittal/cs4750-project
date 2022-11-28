@@ -172,10 +172,23 @@ router.get('/getMyItems/:listID', (req, res) => {
   })
 })
 
+router.get('/deleteList/:listID', (req,res) => {
+  db.deleteCreates(req.params.listID); 
+  db.deleteList(req.params.listID);
+  res.send("List successfully deleted");
+})
+
 router.get('/deleteItem/:itemID', (req,res) => {
   db.deleteSoldBy(req.params.itemID);
   db.deleteItem(req.params.itemID);
   res.send("Item successfully deleted");
+})
+
+router.get('/favoriteItem/:itemID', (req,res) => {
+  //db.deleteCreates(req.params.listID);
+  console.log(req.session.userID)
+  db.addFavorites(parseInt(req.session.userid), parseInt(req.params.itemID));
+  res.send("Item added to favorites");
 })
 
 router.get('/getMyItemID/:desc&:listID', (req, res) => {
