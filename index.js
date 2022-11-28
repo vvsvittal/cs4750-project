@@ -69,17 +69,7 @@ router.get('/home/newitem/:listID', (req, res) => {
   res.sendFile(__dirname+"/new_item.html")
 })
 
-
-router.post('/home/updateitem/:itemID', (req, res) => {
-  
-})
-
-router.get('/home/updateitem/:itemID', (req, res) => {
-  res.sendFile(__dirname+"/new_item.html")
-})
-
 router.get('/home/')
-
 
 router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
   let stringified = JSON.stringify(req.body);
@@ -101,23 +91,7 @@ router.post('/home/newitem', (req, res) => { //description, price, quantity, pur
     res.redirect('/home')
     res.end();
   })
-})
 
-router.post('/home/updateitem', (req, res) => {
-  let stringified = JSON.stringify(req.body);
-  let body = JSON.parse(stringified);
-  db.updateItem(body.itemID,body.description,body.price,body.quantity,body.purchase_date, body.expiration_date, body.category, body.belongs_to);
-  var todayDate = new Date().toISOString().slice(0, 10);
-  db.getTotalItems(body.belongs_to).then(curCount => {
-    let updatedCount = parseInt(curCount)+parseInt(body.quantity);
-    db.updateList(updatedCount, todayDate, body.belongs_to);
-    //getAddress
-    // updateAddress
-    //getStore
-    //updateStore
-  })
-  res.redirect('/home')
-  res.end();
 })
 
 router.get('/list/:listID', (req, res) => {
@@ -169,22 +143,6 @@ router.get('/getMyLists', (req, res) => {
 router.get('/getMyItems/:listID', (req, res) => {
   console.log(req.params.listID);
   db.viewItems(req.params.listID).then(items => {
-    res.send(JSON.stringify(items))
-  })
-})
-
-router.get('/deleteList/:listID', (req,res) => {
-  db.deleteList(req.params.listID);
-  res.send("List successfully deleted");
-})
-
-router.get('/deleteItem/:itemID', (req,res) => {
-  db.deleteItem(req.params.itemID);
-  res.send("Item successfully deleted");
-})
-
-router.get('/getMyItemID/:desc&:listID', (req, res) => {
-  db.getItemId(req.params.desc,req.params.listID).then(items => {
     res.send(JSON.stringify(items))
   })
 })
