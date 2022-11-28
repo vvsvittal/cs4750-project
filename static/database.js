@@ -163,7 +163,17 @@ getItemId: function(desc, belongs){
     });
 },
 
-
+getItemCount: function(itemID) {
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT quantity FROM Item WHERE item_id="${itemID}";`
+        sql.query(queryString, function (error, result){
+            if (error)
+                return reject(error);
+            // console.log(JSON.stringify(result[0].quantity))
+            resolve(JSON.stringify(result[0].quantity))
+        });
+    });
+},
 
 deleteStore: function (storeID){
     let queryString = `DELETE FROM Store WHERE store_id=(${storeID});`;
@@ -300,6 +310,16 @@ deleteItem: function (itemID){
     })
 },
 
+deleteItemWithListID: function (listid){
+    let queryString = `DELETE FROM Item WHERE belongs_to=${listid};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;
+        
+    })
+},
+
 viewItems: function (listID){
     return new Promise((resolve, reject) => {
         let queryString = `SELECT * FROM Item WHERE belongs_to=${listID};`;
@@ -381,9 +401,9 @@ getListId: function(listname, user_id){
     })
 },
 
-viewBelongsTo: function (listID) {
+viewBelongsTo: function (itemID) {
     return new Promise((resolve, reject) => {
-        let queryString = `SELECT item_id FROM Belongs_To WHERE list_id=${listID};`;
+        let queryString = `SELECT list_id FROM Belongs_To WHERE item_id=${itemID};`;
 
         sql.query(queryString, function(error, result){
             if (error)
@@ -391,10 +411,37 @@ viewBelongsTo: function (listID) {
             if(result.length == 0)
                 resolve(null)
             else{
-                resolve(result);
+                resolve(JSON.stringify(result[0].list_id));
             }
         })
     })
+},
+
+addBelongsTo: function(listid, itemid){
+    let queryString = `INSERT INTO Belongs_To(list_id,item_id) VALUES(${listid}, ${itemid});`
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+    console.log("Added into BelongsTo");
+},
+
+deleteBelongsToWithItemID: function(itemid){
+    let queryString = `DELETE FROM Belongs_To WHERE item_id=${itemid};`
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+    console.log("Deleted from BelongsTo");
+},
+
+deleteBelongsToWithListID: function(listid){
+    let queryString = `DELETE FROM Belongs_To WHERE list_id=${listid};`
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+    console.log("Deleted from BelongsTo");
 },
 
 viewSoldBy: function (storeID){

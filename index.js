@@ -77,6 +77,25 @@ router.get('/home/updateitem/:itemID', (req, res) => {
   res.sendFile(__dirname+"/update_item.html")
 })
 
+router.get('/deleteItem/:itemID', (req,res) => {
+  db.deleteSoldBy(req.params.itemID);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  db.getItemCount(req.params.itemID).then(itemCount => {
+    db.viewBelongsTo(req.params.itemID).then(listID => {
+      db.getTotalItems(listID).then(curCount => {
+        console.log(curCount);
+        let updatedCount = parseInt(curCount)-parseInt(itemCount);
+        db.updateList(updatedCount, todayDate, listID);
+        db.deleteBelongsToWithItemID(req.params.itemID);
+        db.deleteItem(req.params.itemID);
+        // res.send("Item successfully deleted");
+      })
+    })
+  })
+  res.redirect("/home")
+  res.end();
+})
+
 router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
   let stringified = JSON.stringify(req.body);
   let body = JSON.parse(stringified);
@@ -91,6 +110,7 @@ router.post('/home/newitem', (req, res) => { //description, price, quantity, pur
       db.getStoreID(body.store_name, addyId).then(storeID => {
         db.getItemId(body.description, body.belongs_to).then(itemid => {
            db.addSoldBy(storeID, itemid)
+           db.addBelongsTo(body.belongs_to, itemid);
         })
       })
     })
@@ -155,16 +175,10 @@ router.get('/getMyItems/:listID', (req, res) => {
 
 router.get('/deleteList/:listID', (req,res) => {
   db.deleteCreates(req.params.listID); 
+  db.deleteBelongsToWithListID(req.params.listID);
+  db.deleteItemWithListID(req.params.listID)
   db.deleteList(req.params.listID);
   res.send("List successfully deleted");
-})
-
-router.get('/deleteItem/:itemID', (req,res) => {
-  db.deleteSoldBy(req.params.itemID);
-  db.deleteItem(req.params.itemID);
-  // look at belongs to table and get list id
-  // 
-  res.send("Item successfully deleted");
 })
 
 router.get('/getMyItemID/:desc&:listID', (req, res) => {
