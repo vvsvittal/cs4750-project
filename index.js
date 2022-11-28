@@ -42,8 +42,10 @@ router.get('/signup', (req, res) => {
 })
 
 router.get('/home', (req, res) => {
-  if(req.session.loggedin)
-    res.sendFile(__dirname+"/welcome.html")
+  if(req.session.loggedin) {
+    res.sendFile(__dirname+"/welcome.html");
+    //db.adminSecurity();
+  }
   else
     res.send("Please Log in before trying this action")
 })
@@ -165,8 +167,7 @@ router.get('/deleteItem/:itemID', (req,res) => {
   res.send("Item successfully deleted");
 })
 
-router.get('/favoriteItem/:itemID', (req,res) => {
-  //db.deleteCreates(req.params.listID);
+router.post('/favoriteItem/:itemID', (req,res) => {
   console.log(req.session.userID)
   db.addFavorites(parseInt(req.session.userid), parseInt(req.params.itemID));
   res.send("Item added to favorites");

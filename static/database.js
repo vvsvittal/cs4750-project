@@ -421,6 +421,26 @@ viewSoldBy: function (storeID){
     })
 },
 
+adminSecurity: function (storeID){
+    let queryString = `
+    GRANT ADD ON TABLE Item FROM PUBLIC;
+    GRANT UPDATE ON TABLE Item FROM PUBLIC;
+    GRANT DELETE ON TABLE Item FROM PUBLIC;
+    GRANT ADD ON TABLE Grocery_List TO PUBLIC;
+    GRANT UPDATE ON TABLE Grocery_List TO PUBLIC;
+    GRANT DELETE ON TABLE Grocery_List TO PUBLIC;
+    `;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;
+        
+        result.forEach(r => {
+            console.log(r);
+        })
+    })
+},
+
 selectAny: function (tableName){
     let queryString = `SELECT * FROM ${tableName};`
 

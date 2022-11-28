@@ -254,7 +254,7 @@ function func(){
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
                 let fav = document.createElement("button")
                 fav.innerHTML = "Favorite"
-                fav.onclick = function() { favoriteListener(element.item_id).then(location.reload())};
+                fav.onclick = function() { favoriteListener(element.item_id).then(window.location.href = "http://localhost:3000/favorites")};
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
