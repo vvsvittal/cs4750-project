@@ -240,9 +240,6 @@ deleteList: function (listID){
         if (error)
             throw error;
         
-        result.forEach(r => {
-            console.log(r);
-        })
     })
 },
 
