@@ -346,6 +346,26 @@ viewCreates: function (userID){
     })
 },
 
+addCreates: function(userID, listid){
+    let queryString = `INSERT INTO Creates(user_id, list_id) VALUES(${userID}, ${listid});`
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+},
+
+getListId: function(listname, user_id){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT list_id FROM Grocery_List WHERE list_name="${listname}" AND belongs_to=${user_id};`;
+
+        sql.query(queryString, function(error, result){
+            if (error)
+                return reject(error)
+            resolve(result[0].list_id);
+        })
+    })
+},
+
 viewBelongsTo: function (listID) {
     return new Promise((resolve, reject) => {
         let queryString = `SELECT item_id FROM Belongs_To WHERE list_id=${listID};`;
