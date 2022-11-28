@@ -156,6 +156,8 @@ router.get('/getMyItems/:listID', (req, res) => {
 router.get('/deleteItem/:itemID', (req,res) => {
   db.deleteSoldBy(req.params.itemID);
   db.deleteItem(req.params.itemID);
+  // look at belongs to table and get list id
+  // 
   res.send("Item successfully deleted");
 })
 
