@@ -99,6 +99,11 @@ router.get('/list/:listID', (req, res) => {
   res.sendFile(__dirname+"/listView.html")
 })
 
+router.get('/item/:itemID', (req, res) => {
+  // res.send("Item ID is " + req.params.listID);
+  res.sendFile(__dirname+"/itemView.html")
+}) 
+
 router.post('/login/validate', (req,res) => {
   let str = JSON.stringify(req.body);
   let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
@@ -143,6 +148,28 @@ router.get('/getMyLists', (req, res) => {
 router.get('/getMyItems/:listID', (req, res) => {
   console.log(req.params.listID);
   db.viewItems(req.params.listID).then(items => {
+    res.send(JSON.stringify(items))
+  })
+})
+
+router.get('/deleteList/:listID', (req,res) => {
+  // let stringified = JSON.stringify(req.body);
+  // let body = JSON.parse(stringified);
+  // console.log(req.body)
+  db.deleteList(req.params.listID);
+  res.send("List successfully deleted");
+})
+
+router.get('/deleteItem/:itemID', (req,res) => {
+  // let stringified = JSON.stringify(req.body);
+  // let body = JSON.parse(stringified);
+  // console.log(req.body)
+  db.deleteItem(req.params.itemID);
+  res.send("Item successfully deleted");
+})
+
+router.get('/getMyItemID/:desc&:listID', (req, res) => {
+  db.getItemId(req.params.desc,req.params.listID).then(items => {
     res.send(JSON.stringify(items))
   })
 })

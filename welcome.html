@@ -37,11 +37,12 @@
     <!-- <button class="btn"></button> -->
     <div id="listTableDiv">
     
-    <table id = "listTable" style="display:none">
+    <table id = "listTable" style="display:none" class="table table-bordered table-condensed table-striped">
       <tr>
         <th>List Name</th>
         <th>Total Items</th>
         <th>Last Update</th>
+        <th>Delete?</th>
       </tr>
     </table>
     </div>
@@ -72,9 +73,13 @@
                 totItems.appendChild(document.createTextNode(element.total_items))
                 let lastUpdate = document.createElement("td");
                 lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
+                let del = document.createElement("button")
+                del.innerHTML = "Delete"
+                del.onclick = function() { deleteListener(element.list_id).then(location.reload())};
                 newRow.appendChild(name);
                 newRow.appendChild(totItems);
                 newRow.appendChild(lastUpdate);
+                newRow.appendChild(del);
                 table.append(newRow);
               });
             } 
@@ -84,6 +89,11 @@
 
     }
     
+    async function deleteListener(listID) {
+        console.log(listID);
+        const delitem = await fetch("/deleteList/" + listID);
+          console.log(delitem.status);
+    }
     
     </script>
     <!-- Optional JavaScript -->
