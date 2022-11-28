@@ -211,6 +211,16 @@ deleteSoldBy: function(itemid){
     console.log("item "+itemid+ " deleted from SoldBy ");
 },
 
+deleteCreates: function(listid){
+    let queryString = `DELETE FROM Creates WHERE list_id=${listid};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("list "+listid+ " deleted from Creates ");
+},
+
 addList: function (listName, totalItems, lastUpdate, belongsTo){
     let queryString = `INSERT INTO Grocery_List(list_name, total_items, last_update, belongs_to) VALUES("${listName}", ${totalItems}, "${lastUpdate}", ${belongsTo});`;
 
@@ -250,9 +260,7 @@ deleteList: function (listID){
         if (error)
             throw error;
         
-        result.forEach(r => {
-            console.log(r);
-        })
+        
     })
 },
 

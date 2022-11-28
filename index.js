@@ -153,6 +153,12 @@ router.get('/getMyItems/:listID', (req, res) => {
   })
 })
 
+router.get('/deleteList/:listID', (req,res) => {
+  db.deleteCreates(req.params.listID); 
+  db.deleteList(req.params.listID);
+  res.send("List successfully deleted");
+})
+
 router.get('/deleteItem/:itemID', (req,res) => {
   db.deleteSoldBy(req.params.itemID);
   db.deleteItem(req.params.itemID);
