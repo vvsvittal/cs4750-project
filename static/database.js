@@ -316,6 +316,17 @@ viewItems: function (listID){
     })
 },
 
+addFavorites: function(userID, itemid){
+    let queryString = `INSERT INTO Favorites(user_id, item_id) VALUES(${userID}, ${itemid});`
+    //`INSERT INTO Favorites (user_id, item_id)
+      //  SELECT (description, price, quantity, purchase_date, expiration_date, category, belongs_to) FROM Item WHERE Item.item_id=${itemID};`
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+    console.log("item "+itemid+ " added to favorites ");
+},
+
 viewFavorites: function (userID){
     return new Promise((resolve, reject) => {
         let queryString = `SELECT * FROM Favorites WHERE user_id=${userID};`;

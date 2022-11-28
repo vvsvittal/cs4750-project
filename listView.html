@@ -252,6 +252,9 @@ function func(){
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
+                let fav = document.createElement("button")
+                fav.innerHTML = "Favorite"
+                fav.onclick = function() { favoriteListener(element.item_id).then(location.reload())};
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
@@ -260,6 +263,7 @@ function func(){
                 newRow.appendChild(category);
                 newRow.appendChild(edit);
                 newRow.appendChild(del);
+                newRow.appendChild(fav);
                 table.append(newRow);
               });
             } 
@@ -276,6 +280,12 @@ function func(){
     async function deleteListener(itemID) {
       // console.log(itemID);
         const delitem = await fetch("/deleteItem/" + itemID);
+          console.log(delitem.status);
+    }
+
+    async function favoriteListener(itemID) {
+       console.log(itemID);
+        const delitem = await fetch("/favoriteItem/" + itemID);
           console.log(delitem.status);
     }
     </script>
