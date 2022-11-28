@@ -71,7 +71,7 @@ router.post('/home/updateitem/:itemID', (req, res) => {
 })
 
 router.get('/home/updateitem/:itemID', (req, res) => {
-  res.sendFile(__dirname+"/new_item.html")
+  res.sendFile(__dirname+"/update_item.html")
 })
 
 router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
@@ -172,6 +172,7 @@ router.get('/getMyItems/:listID', (req, res) => {
 })
 
 router.get('/deleteItem/:itemID', (req,res) => {
+  db.deleteSoldBy(req.params.itemID);
   db.deleteItem(req.params.itemID);
   res.send("Item successfully deleted");
 })

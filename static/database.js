@@ -201,6 +201,16 @@ addSoldBy: function(storeID, itemid){
     console.log("item "+itemid+ " associated with store "+ storeID);
 },
 
+deleteSoldBy: function(itemid){
+    let queryString = `DELETE FROM Sold_By WHERE item_id=${itemid};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("item "+itemid+ " deleted from SoldBy ");
+},
+
 addList: function (listName, totalItems, lastUpdate, belongsTo){
     let queryString = `INSERT INTO Grocery_List(list_name, total_items, last_update, belongs_to) VALUES("${listName}", ${totalItems}, "${lastUpdate}", ${belongsTo});`;
 
