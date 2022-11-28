@@ -273,13 +273,15 @@ addItem: function (description, price, quantity, purchaseDate, expirationDate, c
 },
 
 deleteItem: function (itemID){
-    let queryString = `DELETE FROM Item WHERE item_id=${itemID};`;
+    let queryString = `DELETE FROM Item WHERE list_id=(${itemID});`;
 
     sql.query(queryString, function(error, result){
         if (error)
             throw error;
         
-    console.log("Successfully deleted");
+        result.forEach(r => {
+            console.log(r);
+        })
     })
 },
 
@@ -298,7 +300,6 @@ viewItems: function (listID){
         })
     })
 },
-
 
 viewFavorites: function (userID){
     return new Promise((resolve, reject) => {
