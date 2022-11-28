@@ -163,6 +163,45 @@ getItemId: function(desc, belongs){
     });
 },
 
+getItem: function(itemID) {
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * From Item WHERE item_id = ${itemID};`
+        sql.query(queryString, function(error, result){
+            if(error)
+                return reject(error);
+            resolve(result[0])
+        })
+    })
+
+},
+
+getStore: function(storeID){
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT * From Store WHERE store_id = ${storeID};`
+        sql.query(queryString, function(error, result){
+            if(error)
+                return reject(error);
+            resolve(result[0])
+        })
+    })
+
+},
+
+
+getStoreIDByItem: function(itemID) {
+    return new Promise((resolve, reject) => {
+        let queryString = `SELECT store_id From Sold_By WHERE item_id = ${itemID};`
+        sql.query(queryString, function(error, result){
+            if(error)
+                return reject(error);
+            if(result.length == 0){
+                resolve(null)
+            }
+            resolve(result[0].store_id)
+        })
+    })
+
+},
 
 
 deleteStore: function (storeID){
