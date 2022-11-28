@@ -56,6 +56,7 @@
         <th>Purchase Date</th>
         <th>Expiration Date</th>
         <th>Category</th>
+        <th>Options</th>
       </tr>
     </table>
     <br>
@@ -235,7 +236,10 @@ function func(){
               data.forEach(element => {
                 let newRow = document.createElement("tr"); //create new row in table
                 let description = document.createElement("td");
-                description.appendChild(document.createTextNode(element.description))
+                let itemLink = document.createElement("a");
+                itemLink.href = '/item/'+element.item_id;
+                itemLink.append(document.createTextNode(element.description))
+                description.appendChild(itemLink);
                 let price = document.createElement("td");
                 price.appendChild(document.createTextNode(element.price))
                 let quantity = document.createElement("td");
