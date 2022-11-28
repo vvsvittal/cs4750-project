@@ -240,9 +240,6 @@ deleteList: function (listID){
         if (error)
             throw error;
         
-        result.forEach(r => {
-            console.log(r);
-        })
     })
 },
 
@@ -283,6 +280,16 @@ deleteItem: function (itemID){
             console.log(r);
         })
     })
+},
+
+updateItem: function (itemID, desc, price, quantity, purchaseDate, expirationDate, category) {
+    let queryString = `UPDATE Item SET description="${desc}", price=${price}, quantity=${quantity}, purchase_date="${purchaseDate}", expiration_date="${expirationDate}", category="${category}" WHERE item_id=${itemID};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("Item updated with Item id", itemID);
 },
 
 viewItems: function (listID){
