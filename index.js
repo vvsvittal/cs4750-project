@@ -69,7 +69,13 @@ router.get('/home/newitem/:listID', (req, res) => {
   res.sendFile(__dirname+"/new_item.html")
 })
 
-router.get('/home/')
+router.post('/home/updateitem/:itemID', (req, res) => {
+  
+})
+
+router.get('/home/updateitem/:itemID', (req, res) => {
+  res.sendFile(__dirname+"/update_item.html")
+})
 
 router.post('/home/newitem', (req, res) => { //description, price, quantity, purchaseDate, expirationDate, category,  belongsTo
   let stringified = JSON.stringify(req.body);
@@ -143,6 +149,18 @@ router.get('/getMyLists', (req, res) => {
 router.get('/getMyItems/:listID', (req, res) => {
   console.log(req.params.listID);
   db.viewItems(req.params.listID).then(items => {
+    res.send(JSON.stringify(items))
+  })
+})
+
+router.get('/deleteItem/:itemID', (req,res) => {
+  db.deleteSoldBy(req.params.itemID);
+  db.deleteItem(req.params.itemID);
+  res.send("Item successfully deleted");
+})
+
+router.get('/getMyItemID/:desc&:listID', (req, res) => {
+  db.getItemId(req.params.desc,req.params.listID).then(items => {
     res.send(JSON.stringify(items))
   })
 })
