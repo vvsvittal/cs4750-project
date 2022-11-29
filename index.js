@@ -6,6 +6,7 @@ const path = require('path')
 const express = require('express')
 const session = require('express-session')
 const hasher = require('bcrypt')
+const { brotliDecompress } = require('zlib')
 
 const app = express()
 const router = express.Router()
@@ -193,6 +194,8 @@ router.get('/getMyItems/:listID', (req, res) => {
 })
 
 router.get('/deleteList/:listID', (req,res) => {
+  //db.deleteSoldByForList(req.params.listID);
+  db.deleteFavorites(req.params.listID)
   db.deleteCreates(req.params.listID); 
   db.deleteBelongsToWithListID(req.params.listID);
   db.deleteItemWithListID(req.params.listID)

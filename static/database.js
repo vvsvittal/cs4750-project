@@ -260,6 +260,21 @@ deleteSoldBy: function(itemid){
     })
     console.log("item "+itemid+ " deleted from SoldBy ");
 },
+/*
+deleteSoldByForList: function(listid){
+    let queryString = `DECLARE @cnt INT = 0;
+    WHILE @cnt < (SELECT COUNT(*) FROM Grocery_List WHERE list_id=${listid})
+    BEGIN
+    DELETE FROM Sold_By WHERE item_id=${itemid}
+       SET @cnt = @cnt + 1;
+    END; `;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("item "+itemid+ " deleted from SoldBy ");
+},*/
 
 deleteCreates: function(listid){
     let queryString = `DELETE FROM Creates WHERE list_id=${listid};`;
@@ -385,6 +400,15 @@ addFavorites: function(userID, listid){
             throw error;
     })
     console.log("list "+listid+ " added to favorites ");
+},
+
+deleteFavorites: function(listid){
+    let queryString = `DELETE FROM Favorites WHERE list_id=${listid};`;
+    sql.query(queryString, function(error, result){
+        if(error)
+            throw error;
+    })
+    console.log("list "+listid+ " deleted from favorites ");
 },
 
 viewFavorites: function (userID){
