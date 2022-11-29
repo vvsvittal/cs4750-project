@@ -44,7 +44,7 @@
       async function getFavorites(){
         let res = await fetch('/getFavorites').then(res => {
           res.json().then(data => {
-             console.log(data)
+             console.log("data is " +data)
              if(data == null){
               let tableDiv = document.getElementById("tableDiv");
               let dispMessage = document.createElement("p")
