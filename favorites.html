@@ -69,6 +69,8 @@
                       lastUpdate.appendChild(document.createTextNode(list.last_update.slice(0,10)))
                       let del = document.createElement("button")
                       del.innerHTML = "Delete"
+                      del.style.backgroundColor = 'OrangeRed';
+                      del.innerHTML = "Delete"
                       del.onclick = function() { deleteListener(element.list_id).then(location.reload())};
                       newRow.appendChild(name);
                       newRow.appendChild(lastUpdate);

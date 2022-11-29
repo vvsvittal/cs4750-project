@@ -44,7 +44,7 @@
   </head>
   <body onload="getMyItems()">
     <h3 style="display:inline;"> My Items </h3>
-    <a onclick=func() target="_parent"><button><i class="fa fa-plus"></i></button></a>
+    <a onclick=func() target="_parent"><button type="button" class="btn btn-success"><i class="fa fa-plus"></i></button></a>
     <!-- <button class="btn"></button> -->
     <div id="itemTableDiv">
     
@@ -56,7 +56,7 @@
         <th>Purchase Date</th>
         <th>Expiration Date</th>
         <th>Category</th>
-        <th>Options</th>
+        <th>Delete</th>
       </tr>
     </table>
     <br>
@@ -251,6 +251,8 @@ function func(){
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
                 let del = document.createElement("button")
+                del.innerHTML = "Delete"
+                del.style.backgroundColor = 'OrangeRed';
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
                 
