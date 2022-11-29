@@ -376,15 +376,15 @@ viewItems: function (listID){
     })
 },
 
-addFavorites: function(userID, itemid){
-    let queryString = `INSERT INTO Favorites(user_id, item_id) VALUES(${userID}, ${itemid});`
+addFavorites: function(userID, listid){
+    let queryString = `INSERT INTO Favorites(user_id, list_id) VALUES(${userID}, ${listid});`
     //`INSERT INTO Favorites (user_id, item_id)
       //  SELECT (description, price, quantity, purchase_date, expiration_date, category, belongs_to) FROM Item WHERE Item.item_id=${itemID};`
     sql.query(queryString, function(error, result){
         if(error)
             throw error;
     })
-    console.log("item "+itemid+ " added to favorites ");
+    console.log("list "+listid+ " added to favorites ");
 },
 
 viewFavorites: function (userID){

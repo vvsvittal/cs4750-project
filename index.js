@@ -200,11 +200,11 @@ router.get('/deleteList/:listID', (req,res) => {
   res.send("List successfully deleted");
 })
 
-router.get('/favoriteItem/:itemID', (req,res) => {
+router.get('/favoriteList/:listID', (req,res) => {
   //db.deleteCreates(req.params.listID);
-  console.log(req.session.userID)
-  db.addFavorites(parseInt(req.session.userid), parseInt(req.params.itemID));
-  res.send("Item added to favorites");
+  //console.log(req.session.userID)
+  db.addFavorites(parseInt(req.session.userid), req.params.listID);
+  res.send("List added to favorites");
 })
 
 router.get('/getMyItemID/:desc&:listID', (req, res) => {

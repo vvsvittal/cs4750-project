@@ -76,10 +76,14 @@
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.list_id).then(location.reload())};
+                let fav = document.createElement("button")
+                fav.innerHTML = "Favorite"
+                fav.onclick = function() { favoriteListener(element.list_id).then(location.reload())};
                 newRow.appendChild(name);
                 newRow.appendChild(totItems);
                 newRow.appendChild(lastUpdate);
                 newRow.appendChild(del);
+                newRow.appendChild(fav);
                 table.append(newRow);
               });
             } 
@@ -94,6 +98,12 @@
         const delitem = await fetch("/deleteList/" + listID);
           console.log(delitem.status);
           console.log("list deleted")
+    }
+
+    async function favoriteListener(listID) {
+       console.log(listID);
+        const delitem = await fetch("/favoriteList/" + listID);
+          console.log(delitem.status);
     }
 
     </script>
