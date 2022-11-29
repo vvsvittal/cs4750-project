@@ -209,6 +209,12 @@ router.get('/deleteList/:listID', (req,res) => {
   res.send("List successfully deleted");
 })
 
+router.get('/deleteFavoriteList/:listID', (req,res) => {
+  //db.deleteSoldByForList(req.params.listID);
+  db.deleteFavorites(req.params.listID)
+  res.send("List successfully deleted from Fav");
+})
+
 router.get('/favoriteList/:listID', (req,res) => {
   //db.deleteCreates(req.params.listID);
   //console.log(req.session.userID)

@@ -67,8 +67,12 @@
                       name.appendChild(link);
                       let lastUpdate = document.createElement("td");
                       lastUpdate.appendChild(document.createTextNode(list.last_update.slice(0,10)))
+                      let del = document.createElement("button")
+                      del.innerHTML = "Delete"
+                      del.onclick = function() { deleteListener(element.list_id).then(location.reload())};
                       newRow.appendChild(name);
                       newRow.appendChild(lastUpdate);
+                      newRow.appendChild(del);
                       table.append(newRow);
                     })
                   })
@@ -80,6 +84,13 @@
          
         })
         
+      }
+
+      async function deleteListener(listID) {
+        console.log(listID)
+        const delitem = await fetch("/deleteFavoriteList/" + listID);
+          console.log(delitem.status);
+          console.log("list deleted")
       }
     </script>
     <!-- <button class="btn"></button> -->
