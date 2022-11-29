@@ -250,20 +250,16 @@ function func(){
                 expirationDate.appendChild(document.createTextNode(element.expiration_date.slice(0,10)))
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
-                let edit = document.createElement("button")
-                edit.innerHTML = "Edit"
-                edit.onclick = function() { editListener(element.item_id).then(window.location.href = "http://localhost:3000/home/update/" + element.item_id)}
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
-                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
-                
+                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};              
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
                 newRow.appendChild(purchaseDate);
                 newRow.appendChild(expirationDate);
                 newRow.appendChild(category);
-                newRow.appendChild(edit);
+                
                 newRow.appendChild(del);
                 
                 table.append(newRow);
@@ -271,12 +267,6 @@ function func(){
             } 
           })
         });
-    }
-
-    async function editListener(itemID) {
-      // console.log(itemID);
-        const delitem = await fetch("/updateItem/" + itemID);
-          console.log(delitem.status);
     }
 
     async function deleteListener(itemID) {
