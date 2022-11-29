@@ -252,7 +252,8 @@ function func(){
                 category.appendChild(document.createTextNode(element.category))
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
-                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};              
+                del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
+                
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);

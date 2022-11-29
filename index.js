@@ -176,7 +176,13 @@ router.get('/about', (req, res) => {
 router.get('/getFavorites', (req,res) => {
   db.viewFavorites(req.session.userid).then(favs => {
     console.log(favs);
-    res.send(JSON.stringify(favs));
+    res.send(favs)
+  })
+})
+
+router.get('/getFavoritesInfo/:listId', (req,res) => {
+  db.getFavoriteInfo(req.params.listId).then(result => {
+    res.send(result);
   })
 })
 

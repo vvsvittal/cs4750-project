@@ -328,6 +328,16 @@ deleteList: function (listID){
         
     })
 },
+getFavoriteInfo: function(listid){
+    return new Promise((resolve, reject) => {
+        let QueryString = `SELECT list_id,list_name,last_update FROM Grocery_List WHERE list_id=${listid};`
+        sql.query(QueryString, function(error, result){
+            if (error)
+                reject(error)
+            resolve(result)
+        })
+    })
+},
 
 viewListsByUser: function (userid){
     return new Promise((resolve, reject) => {
@@ -413,7 +423,7 @@ deleteFavorites: function(listid){
 
 viewFavorites: function (userID){
     return new Promise((resolve, reject) => {
-        let queryString = `SELECT * FROM Favorites WHERE user_id=${userID};`;
+        let queryString = `SELECT DISTINCT * FROM Favorites WHERE user_id=${userID};`;
 
         sql.query(queryString, function(error, result){
             if (error)
