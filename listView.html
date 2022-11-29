@@ -56,6 +56,7 @@
         <th>Purchase Date</th>
         <th>Expiration Date</th>
         <th>Category</th>
+        <th>Options</th>
       </tr>
     </table>
     <br>
@@ -235,7 +236,10 @@ function func(){
               data.forEach(element => {
                 let newRow = document.createElement("tr"); //create new row in table
                 let description = document.createElement("td");
-                description.appendChild(document.createTextNode(element.description))
+                let itemLink = document.createElement("a");
+                itemLink.href = '/item/'+element.item_id;
+                itemLink.append(document.createTextNode(element.description))
+                description.appendChild(itemLink);
                 let price = document.createElement("td");
                 price.appendChild(document.createTextNode(element.price))
                 let quantity = document.createElement("td");
@@ -252,6 +256,9 @@ function func(){
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
+                let fav = document.createElement("button")
+                fav.innerHTML = "Favorite"
+                fav.onclick = function() { favoriteListener(element.item_id).then(location.reload())};
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
@@ -260,6 +267,7 @@ function func(){
                 newRow.appendChild(category);
                 newRow.appendChild(edit);
                 newRow.appendChild(del);
+                newRow.appendChild(fav);
                 table.append(newRow);
               });
             } 
@@ -276,6 +284,12 @@ function func(){
     async function deleteListener(itemID) {
       // console.log(itemID);
         const delitem = await fetch("/deleteItem/" + itemID);
+          console.log(delitem.status);
+    }
+
+    async function favoriteListener(itemID) {
+       console.log(itemID);
+        const delitem = await fetch("/favoriteItem/" + itemID);
           console.log(delitem.status);
     }
     </script>

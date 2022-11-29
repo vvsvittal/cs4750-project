@@ -125,6 +125,25 @@ router.get('/list/:listID', (req, res) => {
   res.sendFile(__dirname+"/listView.html")
 })
 
+router.get('/getItem/:itemID', (req, res) => {
+  db.getItem(req.params.itemID).then(itemInfo => {
+    db.getStoreIDByItem(req.params.itemID).then(storeid => {
+      db.getStore(storeid).then(storeInfo => {
+        let resBody = JSON.stringify({
+          item : itemInfo,
+          store: storeInfo,
+        })
+        res.send(resBody)
+      })
+    })
+  })
+})
+
+
+router.get('/item/:itemID', (reqm, res) => {
+  res.sendFile(__dirname +"/itemView.html")
+})
+
 router.post('/login/validate', (req,res) => {
   let str = JSON.stringify(req.body);
   let parsed = JSON.parse(str), user=parsed.username, pw=parsed.password;
@@ -179,6 +198,13 @@ router.get('/deleteList/:listID', (req,res) => {
   db.deleteItemWithListID(req.params.listID)
   db.deleteList(req.params.listID);
   res.send("List successfully deleted");
+})
+
+router.get('/favoriteItem/:itemID', (req,res) => {
+  //db.deleteCreates(req.params.listID);
+  console.log(req.session.userID)
+  db.addFavorites(parseInt(req.session.userid), parseInt(req.params.itemID));
+  res.send("Item added to favorites");
 })
 
 router.get('/getMyItemID/:desc&:listID', (req, res) => {
