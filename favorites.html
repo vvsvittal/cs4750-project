@@ -31,16 +31,55 @@
     <h3 style="display:inline;"> Favorites! </h3>
     <!--<a href="/lists" target="_parent"><button><i class="fa fa-minus"></i></a>
     <div id = "favoritesList"></div> -->
-
+    <br>
+    <div id="tableDiv"> 
+    <table id = "itemTable" style="display:none" class="table table-bordered table-condensed table-striped">
+    </div>
+      <tr>
+        <th>List Name</th>
+        <th>Last Updated</th>
+      </tr>
+    </table>
     <script>
       async function getFavorites(){
-        let res = await fetch('/getFavorites').then(conv => {
-          let prom = conv.json().then(data => {
-            console.log(data[0])
-            console.log(data[0].user_id)
-            console.log(data[0].item_id)
+        let res = await fetch('/getFavorites').then(res => {
+          res.json().then(data => {
+             console.log("data is " +data)
+             if(data == null){
+              let tableDiv = document.getElementById("tableDiv");
+              let dispMessage = document.createElement("p")
+              dispMessage.innerHTML = "Favorite a List to get started!";
+              tableDiv.appendChild(dispMessage);
+             }
+
+             else{
+              data.forEach(element => {
+                let listInfo = fetch('/getFavoritesInfo/'+element.list_id).then(out => {
+                  out.json().then(info => {
+                    let table = document.getElementById("itemTable");
+                    table.style.display = "";
+                    info.forEach(list => {
+                      let newRow = document.createElement("tr");
+                      let name = document.createElement("td");
+                      let link = document.createElement("a");
+                      link.href = "/list/"+list.list_id;
+                      link.append(document.createTextNode(list.list_name));
+                      name.appendChild(link);
+                      let lastUpdate = document.createElement("td");
+                      lastUpdate.appendChild(document.createTextNode(list.last_update.slice(0,10)))
+                      newRow.appendChild(name);
+                      newRow.appendChild(lastUpdate);
+                      table.append(newRow);
+                    })
+                  })
+                })
+              });
+            }
+
           })
+         
         })
+        
       }
     </script>
     <!-- <button class="btn"></button> -->

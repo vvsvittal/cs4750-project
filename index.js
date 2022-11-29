@@ -153,9 +153,15 @@ router.get('/about', (req, res) => {
 })
 
 router.get('/getFavorites', (req,res) => {
-  db.viewFavorites(320).then(favs => {
+  db.viewFavorites(req.session.userid).then(favs => {
     console.log(favs);
-    res.send(JSON.stringify(favs));
+    res.send(favs)
+  })
+})
+
+router.get('/getFavoritesInfo/:listId', (req,res) => {
+  db.getFavoriteInfo(req.params.listId).then(result => {
+    res.send(result);
   })
 })
 
@@ -184,11 +190,11 @@ router.get('/deleteItem/:itemID', (req,res) => {
   res.send("Item successfully deleted");
 })
 
-router.get('/favoriteItem/:itemID', (req,res) => {
+router.get('/favoriteList/:listID', (req,res) => {
   //db.deleteCreates(req.params.listID);
-  console.log(req.session.userID)
-  db.addFavorites(parseInt(req.session.userid), parseInt(req.params.itemID));
-  res.send("Item added to favorites");
+  //console.log(req.session.userID)
+  db.addFavorites(parseInt(req.session.userid), req.params.listID);
+  res.send("List added to favorites");
 })
 
 router.get('/getMyItemID/:desc&:listID', (req, res) => {
