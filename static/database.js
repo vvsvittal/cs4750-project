@@ -365,6 +365,16 @@ addItem: function (description, price, quantity, purchaseDate, expirationDate, c
     })
 },
 
+updateItem: function (itemID, description, price, quantity, purchaseDate, expirationDate, category,  belongsTo){
+    let queryString = `UPDATE Item SET description="${description}", price=${price}, quantity=${quantity}, purchase_date="${purchaseDate}", expiration_date="${expirationDate}", category="${category}", belongs_to=${belongsTo} WHERE item_id=${itemID};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;    
+    console.log("Item added with list id", belongsTo);
+    })
+},
+
 deleteItem: function (itemID){
     let queryString = `DELETE FROM Item WHERE item_id=(${itemID});`;
 

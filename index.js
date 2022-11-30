@@ -70,8 +70,27 @@ router.get('/home/newitem/:listID', (req, res) => {
   res.sendFile(__dirname+"/new_item.html")
 })
 
-router.post('/home/updateitem/:itemID', (req, res) => {
-  
+router.post('/home/updateitem', (req, res) => {
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
+  db.updateItem(body.item_id, body.description,body.price,body.quantity,body.purchase_date, body.expiration_date, body.category, body.belongs_to);
+  var todayDate = new Date().toISOString().slice(0, 10);
+  db.getTotalItems(body.belongs_to).then(curCount => {
+    let updatedCount = parseInt(curCount)+parseInt(body.quantity);
+    db.updateList(updatedCount, todayDate, body.belongs_to);
+    db.addAddress(body.street_number, body.street, body.city, body.state, body.zip, body.unit);
+    db.getAddressID(body.street_number, body.street, body.city, body.state, body.zip, body.unit).then(addyId => {
+      db.addStore(body.store_name, addyId);
+      db.getStoreID(body.store_name, addyId).then(storeID => {
+        db.getItemId(body.description, body.belongs_to).then(itemid => {
+           db.addSoldBy(storeID, itemid)
+           db.addBelongsTo(body.belongs_to, itemid);
+        })
+      })
+    })
+    res.redirect('/home')
+    res.end();
+  })
 })
 
 router.get('/home/updateitem/:itemID', (req, res) => {

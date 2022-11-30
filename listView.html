@@ -250,6 +250,11 @@ function func(){
                 expirationDate.appendChild(document.createTextNode(element.expiration_date.slice(0,10)))
                 let category = document.createElement("td");
                 category.appendChild(document.createTextNode(element.category))
+
+                let edit = document.createElement("button")
+                edit.innerHTML = "Edit"
+                edit.onclick = function() { editListener(element.item_id).then(location.reload())};
+
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.style.backgroundColor = 'OrangeRed';
@@ -262,7 +267,7 @@ function func(){
                 newRow.appendChild(purchaseDate);
                 newRow.appendChild(expirationDate);
                 newRow.appendChild(category);
-                
+                newRow.appendChild(edit);
                 newRow.appendChild(del);
                 
                 table.append(newRow);
@@ -275,6 +280,14 @@ function func(){
     async function deleteListener(itemID) {
       // console.log(itemID);
         const delitem = await fetch("/deleteItem/" + itemID);
+          console.log(delitem.status);
+    }
+
+    async function editListener(itemID) {
+      // console.log(itemID);
+      var listIDValue = window.location.href.substring(27);
+	    window.location.href = "http://localhost:3000/home/updateitem/" + itemID;
+        const delitem = await fetch("/editItem/" + itemID);
           console.log(delitem.status);
     }
 
