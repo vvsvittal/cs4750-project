@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/home">Grocery List</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/test">Logout</span></a>
+            <a class="nav-item nav-link" href="/lists">Lists</a>
+            <a class="nav-item nav-link" href="/home">Home</a>
+            <a class="nav-item nav-link" href="/about" >About</a>
+          </div>
+        </div> 
+      </nav>  
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    
+  </head>
+  <body onload="getMyItem()">
+    <!-- description, price, quantity, purchaseDate, expirationDate, category,  belongsTo -->
+    <form action = /home/updateitem method = post>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description"><br>
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price" step="0.01"><br>
+        <label for="quantity">Quantity:</label><br>
+        <input type="number" id="quantity" name="quantity"><br>
+        <label for="purchase_date">Purchase Date:</label><br>
+        <input type="date" id="purchase_date" name="purchase_date"><br>
+        <label for="expiration_date">Expiration Date:</label><br>
+        <input type="date" id="expiration_date" name="expiration_date"><br>
+        <label for="category">Category:</label><br>
+        <input type="text" id="category" name="category"><br>
+        <input type="hidden" id="item_id" name="item_id">
+        <input type="submit" value="Submit" />
+    </form>
+
+<script type="text/javascript">
+      var itemID = window.location.href.substring(38);
+      document.getElementById("item_id").value=(itemID);
+</script>    
+
+<script>
+  async function getMyItem(){
+    console.log(window.location.href.substring(38))
+    let myLists = await fetch('/getJustItem/' + window.location.href.substring(38)).then(res => {
+      res.json().then(data => {
+        console.log(data);
+        if(data == null){ //No lists were found
+          let tableDiv = document.getElementById("listTableDiv");
+          let dispMessage = document.createElement("p")
+          dispMessage.innerHTML = "Create a list to get started!";
+          tableDiv.appendChild(dispMessage);
+        }
+        else{ //If lists were found for the current user
+          let desc = document.getElementById("description").value = data.item.description;
+          let price = document.getElementById("price").value = data.item.price;
+          let quantity = document.getElementById("quantity").value = data.item.quantity;
+          let purchase_date = document.getElementById("purchase_date").value = data.item.purchase_date.slice(0,10);
+          let expiration_date = document.getElementById("expiration_date").value = data.item.expiration_date.slice(0,10);
+          let category = document.getElementById("category").value = data.item.category;
+
+          };
+
+      })
+    })
+  }
+     
+   </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+
