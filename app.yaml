@@ -1,1 +1,6 @@
 runtime: nodejs16
+env_variables:
+  DB_USER: "root"
+  DB_NAME: "grocerylist-cs4750"
+  DB_PASS: "cs4750project"
+  DB_INSTANCE: "cs4750-projectinstance"

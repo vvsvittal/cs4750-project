@@ -6,6 +6,11 @@ var sql = database.createConnection({
     database: "grocerylist-cs4750",
     user: "root",
     password: "cs4750project"
+    // host: `cloudsql/${process.env.DB_INSTANCE}`,
+    // database: process.env.DB_NAME,
+    // user: process.env.DB_USER,
+    // password: process.env.DB_PASS,
+    // socketPath: `cloudsql/${process.env.DB_INSTANCE}`
 })
 
 sql.connect(function(err){
@@ -184,6 +189,16 @@ getItem: function(itemID) {
         })
     })
 
+},
+
+updateItem: function (description, price, quantity, purchaseDate, expirationDate, category,  itemID){
+    let queryString = `UPDATE Item SET description="${description}", price=${price}, quantity=${quantity}, purchase_date="${purchaseDate}", expiration_date="${expirationDate}", category="${category}" WHERE item_id=${itemID};`;
+
+    sql.query(queryString, function(error, result){
+        if (error)
+            throw error;      
+    })
+    console.log("Item updated with list id", itemID);
 },
 
 getStore: function(storeID){

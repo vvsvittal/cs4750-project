@@ -10,7 +10,7 @@ const { brotliDecompress } = require('zlib')
 
 const app = express()
 const router = express.Router()
-const port = process.env.PORT
+const port = 3000
 
 app.use(session({
 	secret: 'authSecret',
@@ -70,8 +70,11 @@ router.get('/home/newitem/:listID', (req, res) => {
   res.sendFile(__dirname+"/new_item.html")
 })
 
-router.post('/home/updateitem/:itemID', (req, res) => {
-  
+router.post('/home/updateitem', (req, res) => {
+  let stringified = JSON.stringify(req.body);
+  let body = JSON.parse(stringified);
+  db.updateItem(body.description, body.price, body.quantity, body.purchase_date, body.expiration_date, body.category, body.item_id)
+  res.redirect('/home')
 })
 
 router.get('/home/updateitem/:itemID', (req, res) => {
@@ -138,6 +141,15 @@ router.get('/getItem/:itemID', (req, res) => {
       })
     })
   })
+})
+
+router.get('/getJustItem/:itemID', (req, res) => {
+  db.getItem(req.params.itemID).then(itemInfo => {
+        let resBody = JSON.stringify({
+          item : itemInfo,
+        })
+        res.send(resBody)
+      })
 })
 
 
