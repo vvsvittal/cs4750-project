@@ -33,7 +33,7 @@
     
     <h3 style="display:inline;"> My Lists </h3>
     <!-- <h3 style="display:inline;"> {window.location.href} </h3> -->
-    <a href="/home/newlist" target="_parent"><button><i class="fa fa-plus"></i></button></a>
+    <a href="/home/newlist" target="_parent"><button type="button" class="btn btn-prinmary"><i class="fa fa-plus"></i></button></a>
     <!-- <button class="btn"></button> -->
     <div id="listTableDiv">
     
@@ -42,7 +42,7 @@
         <th>List Name</th>
         <th>Total Items</th>
         <th>Last Update</th>
-        <th>Delete?</th>
+        <th>Delete/Favorite</th>
       </tr>
     </table>
     </div>
@@ -74,10 +74,12 @@
                 let lastUpdate = document.createElement("td");
                 lastUpdate.appendChild(document.createTextNode(element.last_update.slice(0,10)))
                 let del = document.createElement("button")
+                del.style.backgroundColor = 'OrangeRed';
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.list_id).then(location.reload())};
                 let fav = document.createElement("button")
                 fav.innerHTML = "Favorite"
+                fav.style.backgroundColor = 'SpringGreen';
                 fav.onclick = function() { favoriteListener(element.list_id).then(location.reload())};
                 newRow.appendChild(name);
                 newRow.appendChild(totItems);

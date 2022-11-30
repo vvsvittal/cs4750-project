@@ -10,7 +10,7 @@ const { brotliDecompress } = require('zlib')
 
 const app = express()
 const router = express.Router()
-const port = 3000
+const port = process.env.PORT
 
 app.use(session({
 	secret: 'authSecret',
@@ -207,6 +207,12 @@ router.get('/deleteList/:listID', (req,res) => {
   db.deleteItemWithListID(req.params.listID)
   db.deleteList(req.params.listID);
   res.send("List successfully deleted");
+})
+
+router.get('/deleteFavoriteList/:listID', (req,res) => {
+  //db.deleteSoldByForList(req.params.listID);
+  db.deleteFavorites(req.params.listID)
+  res.send("List successfully deleted from Fav");
 })
 
 router.get('/favoriteList/:listID', (req,res) => {
