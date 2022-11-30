@@ -303,6 +303,7 @@ getTotalItems: function(listID){
         sql.query(queryString, function(error, result){
             if (error)
                 return reject(error);
+            
             resolve(result[0].total_items);      
     })
     })

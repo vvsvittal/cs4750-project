@@ -253,7 +253,9 @@ function func(){
                 let del = document.createElement("button")
                 del.innerHTML = "Delete"
                 del.onclick = function() { deleteListener(element.item_id).then(location.reload())};
-                
+                let edit = document.createElement("button")
+                edit.innerHTML = "Edit"
+                edit.onclick = function() { editListener(element.item_id).then(console.log("Successful"))};
                 newRow.appendChild(description);
                 newRow.appendChild(price);
                 newRow.appendChild(quantity);
@@ -262,7 +264,7 @@ function func(){
                 newRow.appendChild(category);
                 
                 newRow.appendChild(del);
-                
+                newRow.appendChild(edit);
                 table.append(newRow);
               });
             } 
@@ -274,6 +276,11 @@ function func(){
       // console.log(itemID);
         const delitem = await fetch("/deleteItem/" + itemID);
           console.log(delitem.status);
+    }
+
+    async function editListener(itemID) {
+      // console.log(itemID);
+      window.location.href = "http://localhost:3000/home/updateitem/" + itemID;
     }
 
     
